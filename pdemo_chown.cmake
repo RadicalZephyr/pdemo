@@ -18,12 +18,12 @@
 
 
 # Copy the files to the destination directory
-EXECUTE_PROCESS(COMMAND chown root ${CMAKE_INSTALL_PREFIX}/bin/pdip
-                COMMAND chgrp root ${CMAKE_INSTALL_PREFIX}/bin/pdip
-                COMMAND chown root ${CMAKE_INSTALL_PREFIX}/share/man/fr/man1/pdip.1.gz
-                COMMAND chgrp root ${CMAKE_INSTALL_PREFIX}/share/man/fr/man1/pdip.1.gz
-                COMMAND chown root ${CMAKE_INSTALL_PREFIX}/share/man/man1/pdip.1.gz
-                COMMAND chgrp root ${CMAKE_INSTALL_PREFIX}/share/man/man1/pdip.1.gz
+EXECUTE_PROCESS(COMMAND chown root ${CMAKE_INSTALL_PREFIX}/bin/pdemo
+                COMMAND chgrp root ${CMAKE_INSTALL_PREFIX}/bin/pdemo
+                COMMAND chown root ${CMAKE_INSTALL_PREFIX}/share/man/fr/man1/pdemo.1.gz
+                COMMAND chgrp root ${CMAKE_INSTALL_PREFIX}/share/man/fr/man1/pdemo.1.gz
+                COMMAND chown root ${CMAKE_INSTALL_PREFIX}/share/man/man1/pdemo.1.gz
+                COMMAND chgrp root ${CMAKE_INSTALL_PREFIX}/share/man/man1/pdemo.1.gz
                )
 
 

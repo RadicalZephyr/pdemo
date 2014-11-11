@@ -1,6 +1,6 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // File        : config.h
-// Description : Configuration of PDIP
+// Description : Configuration of PDEMO
 // License     :
 //
 //  Copyright (C) 2008-2010 Rachid Koucha <rachid dot koucha at free dot fr>
@@ -30,9 +30,9 @@
 #define CONFIG_H
 
 //---------------------------------------------------------------------------
-// Name : PDIP_VERSION
-// Usage: Version of PDIP
+// Name : PDEMO_VERSION
+// Usage: Version of PDEMO
 //----------------------------------------------------------------------------
-#define PDIP_VERSION "@PDIP_VERSION@"
+#define PDEMO_VERSION "@PDEMO_VERSION@"
 
 #endif // CONFIG_H

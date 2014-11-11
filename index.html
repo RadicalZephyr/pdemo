@@ -3,14 +3,14 @@
 
 
 
-  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>Programmed Dialogues with Interactive Programs (PDIP)</title>
-  
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>Programmed Dialogues with Interactive Programs (PDEMO)</title>
+
   <meta name="author" content="rachid koucha">
-  <meta name="Category" content="PDIP, expect, PTY, pseudo-terminals, linux, freeware, telnet">
+  <meta name="Category" content="PDEMO, expect, PTY, pseudo-terminals, linux, freeware, telnet">
   <meta name="language" content="en">
   <meta http-equiv="Content-Language" content="en">
-  <meta name="description" content="PDIP stands for Programmed Dialogue with Interactive Programs. This is an expect-like tool designed to automatize the execution of programs which normally need human intervention.">
-  <meta name="keywords" content="PDIP, expect, PTY, pseudo-terminals, linux, freeware, telnet"></head><body>
+  <meta name="description" content="PDEMO stands for Programmed Dialogue with Interactive Programs. This is an expect-like tool designed to automatize the execution of programs which normally need human intervention.">
+  <meta name="keywords" content="PDEMO, expect, PTY, pseudo-terminals, linux, freeware, telnet"></head><body>
 <small><small><big><a href="http://rachid.koucha.free.fr/index.html">Back
 to
 home
@@ -40,7 +40,7 @@ Koucha</a><br>
 </small>
 <h1 style="text-align: center;"><small>Programmed
 Dialogue with Interactive Programs</small></h1>
-<h1 style="text-align: center;"><small>(<a href="https://sourceforge.net/projects/pdip">PDIP</a>)</small></h1>
+<h1 style="text-align: center;"><small>(<a href="https://sourceforge.net/projects/pdemo">PDEMO</a>)</small></h1>
 <table style="text-align: left; margin-left: auto; margin-right: auto;">
   <tbody>
     <tr>
@@ -69,13 +69,13 @@ google_ad_height = 90;
 <hr style="width: 100%; height: 2px;">
 <h2><a name="Introduction"></a>Introduction</h2>
 <br>
-PDIP stands for <span style="font-weight: bold;">P</span>rogrammed
+PDEMO stands for <span style="font-weight: bold;">P</span>rogrammed
 <span style="font-weight: bold;">D</span>ialogue
 with <span style="font-weight: bold;">I</span>nteractive
 <span style="font-weight: bold;">P</span>rograms. It
 is&nbsp; a command line oriented utility looking like a
 simplified&nbsp; version&nbsp; of the famous <a href="http://expect.nist.gov/">EXPECT</a> utility. The
-acronym PDIP itself comes from the first lines of the manual of <a href="http://expect.nist.gov/">EXPECT</a>.&nbsp;
+acronym PDEMO itself comes from the first lines of the manual of <a href="http://expect.nist.gov/">EXPECT</a>.&nbsp;
 Like <a href="http://expect.nist.gov/">EXPECT</a>,&nbsp;
 it&nbsp; is a freeware and it interprets a scripting language to
 dialog
@@ -86,7 +86,7 @@ time, accept a high level scripting language providing branching and
 high level control structures or giving back the control to the
 operator during a session.<br>
 <br>
-PDIP accepts a very simple language on the input to provide basic
+PDEMO accepts a very simple language on the input to provide basic
 functions such as:<br>
 <ul>
   <li>Filtering the program&#8217;s output to catch a string
@@ -96,21 +96,21 @@ matching a given pattern</li>
 amount of seconds</li>
 </ul>
 <br>
-PDIP has been designed to run under any Linux operating system.<br>
+PDEMO has been designed to run under any Linux operating system.<br>
 <br>
 The command to launch along with its options and parameters is passed
-at the end of the command line. If options are passed to pdip and/or
+at the end of the command line. If options are passed to pdemo and/or
 the command, then&nbsp; the&nbsp; command&nbsp;
 must&nbsp; be
 preceded&nbsp; by&nbsp; a double hyphen (--). Otherwise the
 options
-will be passed to pdip and will trigger errors.<br>
+will be passed to pdemo and will trigger errors.<br>
 <br>
 <hr style="width: 100%; height: 2px;">
 <h2><a name="Usage"></a>Usage</h2>
-The command line to launch PDIP looks like:<br>
+The command line to launch PDEMO looks like:<br>
 <br>
-<span style="font-family: monospace;">pdip [ <a href="#-s">-s</a>
+<span style="font-family: monospace;">pdemo [ <a href="#-s">-s</a>
 cmdfile ] [ <a href="#-b">-b</a> buffer-size ] [ <a href="#-d">-d</a>
 level ] [ <a href="#-h">-h</a> ]
 [ <a href="#-V">-V</a> ] [ <a href="#-e">-e</a> ] [ <a href="#-t">-t</a>
@@ -137,7 +137,7 @@ Display the help of the command (subset of this man page).<br>
 <span style="font-weight: bold;"><a name="-s"></a>-s
 cmdfile |
 --script=cmdfile</span><br>
-Script of input commands (default stdin). PDIP reads cmdfile or the
+Script of input commands (default stdin). PDEMO reads cmdfile or the
 standard input (default) and accepts the
 following commands:<br>
 <br>
@@ -200,7 +200,7 @@ sleep x</span><br>
 Stop activity during x seconds<br>
 <br>
 <span style="font-weight: bold;">exit</span><br>
-Terminate PDIP<br>
+Terminate PDEMO<br>
 <br>
 <span style="font-weight: bold;">sh [-s] cmd par...<br>
 </span>Launch the <span style="font-weight: bold;">cmd par...</span>&nbsp; shell command (synchronously if <span style="font-weight: bold;">-s</span> is specified).<span style="font-weight: bold;"><br>
@@ -217,20 +217,20 @@ Redirect error output of the controlled program.<br>
 </div>
 <br>
 <div style="margin-left: 40px;"><span style="font-weight: bold;"><a name="-t"></a>-t | --term</span><br>
-Make pdip behave as a simple line mode terminal.<br>
+Make pdemo behave as a simple line mode terminal.<br>
 </div>
 <br>
 <div style="margin-left: 40px;"><span style="font-weight: bold;"><a name="-o"></a>-o | --outstand</span><br>
-Make pdip print unread data from the controlled program at the end of
+Make pdemo print unread data from the controlled program at the end of
 the session.<br>
 <br>
 <span style="font-weight: bold;"><a name="-p"></a>-p | --propexit<br>
 </span>Propagate&nbsp; the&nbsp; exit&nbsp; code of the controlled
-program to <span style="font-weight: bold;">pdip</span>.&nbsp; This
-makes <span style="font-weight: bold;">pdip</span> exit with the exit
+program to <span style="font-weight: bold;">pdemo</span>.&nbsp; This
+makes <span style="font-weight: bold;">pdemo</span> exit with the exit
 code of the controlled program (the exit code is 1 if the controlled
-program terminates because of a signal). By default, the exit code of <span style="font-weight: bold;">pdip</span> is 0 no matter the exit code of
-the controlled program&nbsp; unless there is an error internal to <span style="font-weight: bold;">pdip</span>.<span style="font-weight: bold;"><br>
+program terminates because of a signal). By default, the exit code of <span style="font-weight: bold;">pdemo</span> is 0 no matter the exit code of
+the controlled program&nbsp; unless there is an error internal to <span style="font-weight: bold;">pdemo</span>.<span style="font-weight: bold;"><br>
 </span></div>
 <br>
 <hr style="width: 100%; height: 2px;">
@@ -254,7 +254,7 @@ ls(1) command before disconnecting from the shell via the exit
 command.<br>
 <br>
 <div style="margin-left: 40px;"><span style="font-family: monospace;">$
-pdip -- telnet -p 34770
+pdemo -- telnet -p 34770
 remote</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">recv "login"</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">send
@@ -275,7 +275,7 @@ metacharacter &#8217;$&#8217; with &#8217;\&#8217;</span><br style="font-family:
 #
 Exit
 from
-PDIP</span><br style="font-family: monospace;">
+PDEMO</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">$</span><br>
 </div>
 <br>
@@ -295,7 +295,7 @@ command before disconnecting from ftp with the
 command.<br>
 <br>
 <div style="margin-left: 40px;"><span style="font-family: monospace;">$
-pdip&nbsp;ftp remote</span><br style="font-family: monospace;">
+pdemo&nbsp;ftp remote</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">recv "Name"</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">send
 "foo\n"&nbsp;&nbsp;&nbsp; # Login name is
@@ -316,7 +316,7 @@ command</span><br style="font-family: monospace;">
 #
 Exit
 from
-PDIP</span><br style="font-family: monospace;">
+PDEMO</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">$</span><br>
 </div>
 <br>
@@ -329,7 +329,7 @@ operations are launched &#8217;3+4&#8217; and
 we quit bc.<br>
 <br>
 <div style="margin-left: 40px;"><span style="font-family: monospace;">$
-pdip&nbsp;bc</span><br style="font-family: monospace;">
+pdemo&nbsp;bc</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">recv
 "warranty"&nbsp; # Near the end of the startup banner</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">recv
@@ -351,7 +351,7 @@ pdip&nbsp;bc</span><br style="font-family: monospace;">
 #
 Exit
 from
-PDIP</span><br style="font-family: monospace;">
+PDEMO</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">$</span><br style="font-family: monospace;">
 </div>
 <br>
@@ -376,7 +376,7 @@ telnet(1)&nbsp; with&nbsp;
 the &#8217;exit&#8217; command.<br>
 <br>
 <div style="margin-left: 40px;"><span style="font-family: monospace;">$
-pdip telnet remote</span><br style="font-family: monospace;">
+pdemo telnet remote</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">recv "login:"</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">send
 "foo\n"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -411,14 +411,14 @@ telnet</span><br style="font-family: monospace;">
 #
 Exit
 from
-PDIP</span><br style="font-family: monospace;">
+PDEMO</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">$</span><br style="font-family: monospace;">
 </div>
 <br style="font-family: monospace;">
 <hr style="width: 100%; height: 2px; font-family: monospace;">
 <h2><a style="font-family: monospace;" name="Download"></a>Download</h2>
 <br>
-PDIP can be downloaded from this <a href="https://sourceforge.net/projects/pdip">page</a>
+PDEMO can be downloaded from this <a href="https://sourceforge.net/projects/pdemo">page</a>
 in one of the following three ways:<br>
 <ul>
   <li>Source package</li>
@@ -429,7 +429,7 @@ package</li>
 <hr style="width: 100%; height: 2px;">
 <h2><a name="Installation"></a>Installation
 &amp; build</h2>
-PDIP&nbsp;can be installed in three ways:<br>
+PDEMO&nbsp;can be installed in three ways:<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 1. <a href="#1_Installation_from_the_sources">Installation
@@ -459,29 +459,29 @@ of a zipped tar file</a><br>
 Installation from the sources</h3>
 The installation from the sources supposes that <a href="http://rachid.koucha.free.fr/tech_corner/cmake_manual.html">cmake</a>
 is installed on your Linux system.<br>
-Unpack the tar compressed file pdip-xxx.tgz into a directory. This will
-create a sub-directory called pdip-xxx with the source files of the
+Unpack the tar compressed file pdemo-xxx.tgz into a directory. This will
+create a sub-directory called pdemo-xxx with the source files of the
 program:<br>
 <br>
 <span style="font-family: monospace;">$ tar xvfz
-pdip-xxx.tgz</span><br style="font-family: monospace;">
+pdemo-xxx.tgz</span><br style="font-family: monospace;">
 <br>
 Go into the newly created directory:<br>
 <br>
-<span style="font-family: monospace;">$ cd pdip-xxx</span><br>
+<span style="font-family: monospace;">$ cd pdemo-xxx</span><br>
 <br>
-Make sure the file 'pdip_install.sh' has the execute permission:<br>
+Make sure the file 'pdemo_install.sh' has the execute permission:<br>
 <br>
 <span style="font-family: monospace;">$ chmod +x
-pdip_install.sh</span><br>
+pdemo_install.sh</span><br>
 <br>
-Launch the script 'pdip_install.sh' to get the help:<br>
+Launch the script 'pdemo_install.sh' to get the help:<br>
 <br>
-<span style="font-family: monospace;">$ ./pdip_install.sh
+<span style="font-family: monospace;">$ ./pdemo_install.sh
 -h</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">Usage:
-pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]</span><br style="font-family: monospace;">
+pdemo_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 -d
@@ -521,22 +521,22 @@ optionnaly '-d' to specify an installation directory different than
 For example, for an installation in '/usr/local', type:<br>
 <br>
 <span style="font-family: monospace;">$ sudo
-./pdip_install.sh -I</span><br style="font-family: monospace;">
+./pdemo_install.sh -I</span><br style="font-family: monospace;">
 <br>
 For an installation in '/usr', type;<br>
 <br>
 <span style="font-family: monospace;">$ sudo
-./pdip_install.sh -I -d /usr</span><br>
+./pdemo_install.sh -I -d /usr</span><br>
 <br>
-If your PATH variable is correctly set, PDIP help can be displayed:<br>
+If your PATH variable is correctly set, PDEMO help can be displayed:<br>
 <br>
-$ pdip --help<br>
+$ pdemo --help<br>
 [...]<br>
 <br>
-If your MANPATH variable is correctly set, PDIP's online manual can be
+If your MANPATH variable is correctly set, PDEMO's online manual can be
 displayed:<br>
 <br>
-<span style="font-family: monospace;">$ man pdip<br>
+<span style="font-family: monospace;">$ man pdemo<br>
 [...]<br style="font-family: monospace;">
 </span><br>
 <h3><a name="2_Installation_of_the_binaries_from_the"></a>2.
@@ -544,42 +544,42 @@ Installation of the binaries from the DEB package</h3>
 The files are installed in via the command:<br>
 <br>
 <span style="font-family: monospace;">$ sudo dpkg -i
-pdip-xxx.deb</span><br style="font-family: monospace;">
+pdemo-xxx.deb</span><br style="font-family: monospace;">
 <br>
 <h3><a name="3_Installation_of_the_binaries_from_the"></a>3.
 Installation of the binaries from the RPM package</h3>
 The files are installed via the command:<br>
 <br>
 <span style="font-family: monospace;">$ sudo rpm -i
-pdip-xxx.rpm</span><br>
+pdemo-xxx.rpm</span><br>
 <br>
 <h3><a name="4_Generation_of_a_DEB_binary_package"></a>4.
 Generation of a DEB binary package</h3>
 The installation from the sources supposes that <a href="http://rachid.koucha.free.fr/tech_corner/cmake_manual.html">cmake</a>
 is installed on your Linux system<br>
-Unpack the tar compressed file pdip-xxx.tgz into a directory. This will
-create a sub-directory called 'pdip-xxx' with the source files of the
+Unpack the tar compressed file pdemo-xxx.tgz into a directory. This will
+create a sub-directory called 'pdemo-xxx' with the source files of the
 program:<br>
 <br>
 <span style="font-family: monospace;">$ tar xvfz
-pdip-xxx.tgz</span><br>
+pdemo-xxx.tgz</span><br>
 <br>
 Go into the newly created directory:<br>
 <br>
-<span style="font-family: monospace;">$ cd pdip-xxx</span><br>
+<span style="font-family: monospace;">$ cd pdemo-xxx</span><br>
 <br>
-Make sure the file 'pdip_install.sh' has the execute permission:<br>
+Make sure the file 'pdemo_install.sh' has the execute permission:<br>
 <br>
 <span style="font-family: monospace;">$ chmod +x
-pdip_install.sh</span><br>
+pdemo_install.sh</span><br>
 <br>
-Launch the script 'pdip_install.sh' to get the help:<br>
+Launch the script 'pdemo_install.sh' to get the help:<br>
 <br>
-<span style="font-family: monospace;">$ ./pdip_install.sh
+<span style="font-family: monospace;">$ ./pdemo_install.sh
 -h</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">Usage:
-pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]</span><br style="font-family: monospace;">
+pdemo_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 -d
@@ -620,40 +620,40 @@ For example, for a package which will be installed in '/usr/local',
 type:<br>
 <br>
 <span style="font-family: monospace;">$ sudo
-./pdip_install.sh -P DEB</span><br>
+./pdemo_install.sh -P DEB</span><br>
 <br>
 For an installation in '/usr', type;<br>
 <br>
 <span style="font-family: monospace;">$ sudo
-./pdip_install.sh -P DEB -d /usr</span><br>
+./pdemo_install.sh -P DEB -d /usr</span><br>
 <br>
 <h3><a name="5_Generation_of_a_RPM_binary_package"></a>5.
 Generation of a RPM binary package</h3>
 The installation from the sources supposes that <a href="http://rachid.koucha.free.fr/tech_corner/cmake_manual.html">cmake</a>
 is installed on your Linux system.<br>
-Unpack the tar compressed file pdip-xxx.tgz into a directory. This will
-create a sub-directory called 'pdip-xxx' with the source files of the
+Unpack the tar compressed file pdemo-xxx.tgz into a directory. This will
+create a sub-directory called 'pdemo-xxx' with the source files of the
 program:<br>
 <br>
 <span style="font-family: monospace;">$ tar xvfz
-pdip-xxx.tgz</span><br>
+pdemo-xxx.tgz</span><br>
 <br>
 Go into the newly created directory:<br>
 <br>
-<span style="font-family: monospace;">$ cd pdip-xxx</span><br>
+<span style="font-family: monospace;">$ cd pdemo-xxx</span><br>
 <br>
-Make sure the file 'pdip_install.sh' has the execute permission:<br>
+Make sure the file 'pdemo_install.sh' has the execute permission:<br>
 <br>
 <span style="font-family: monospace;">$ chmod +x
-pdip_install.sh</span><br>
+pdemo_install.sh</span><br>
 <br>
-Launch the script 'pdip_install.sh' to get the help:<br>
+Launch the script 'pdemo_install.sh' to get the help:<br>
 <br>
-<span style="font-family: monospace;">$ ./pdip_install.sh
+<span style="font-family: monospace;">$ ./pdemo_install.sh
 -h</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">Usage:
-pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]</span><br style="font-family: monospace;">
+pdemo_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 -d
@@ -694,40 +694,40 @@ For example, for a package which will be installed in '/usr/local',
 type:<br>
 <br>
 <span style="font-family: monospace;">$ sudo
-./pdip_install.sh -P RPM</span><br>
+./pdemo_install.sh -P RPM</span><br>
 <br>
 For an installation in '/usr', type;<br>
 <br>
 <span style="font-family: monospace;">$ sudo
-./pdip_install.sh -P RPM -d /usr</span><br>
+./pdemo_install.sh -P RPM -d /usr</span><br>
 <br>
 <h3><a name="6_Generation_of_a_zipped_tar_file"></a>6.
 Generation of a zipped tar file</h3>
 The installation from the sources supposes that <a href="http://rachid.koucha.free.fr/tech_corner/cmake_manual.html">cmake</a>
 is installed on your Linux system.<br>
-Unpack the tar compressed file pdip-xxx.tgz into a directory. This will
-create a sub-directory called 'pdip-xxx' with the source files of the
+Unpack the tar compressed file pdemo-xxx.tgz into a directory. This will
+create a sub-directory called 'pdemo-xxx' with the source files of the
 program:<br>
 <br>
 <span style="font-family: monospace;">$ tar xvfz
-pdip-xxx.tgz</span><br>
+pdemo-xxx.tgz</span><br>
 <br>
 Go into the newly created directory:<br>
 <br>
-<span style="font-family: monospace;">$ cd pdip-xxx</span><br>
+<span style="font-family: monospace;">$ cd pdemo-xxx</span><br>
 <br>
-Make sure the file 'pdip_install.sh' has the execute permission:<br>
+Make sure the file 'pdemo_install.sh' has the execute permission:<br>
 <br>
 <span style="font-family: monospace;">$ chmod +x
-pdip_install.sh</span><br>
+pdemo_install.sh</span><br>
 <br>
-Launch the script 'pdip_install.sh' to get the help:<br>
+Launch the script 'pdemo_install.sh' to get the help:<br>
 <br>
-<span style="font-family: monospace;">$ ./pdip_install.sh
+<span style="font-family: monospace;">$ ./pdemo_install.sh
 -h</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">Usage:
-pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]</span><br style="font-family: monospace;">
+pdemo_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 -d
@@ -763,7 +763,7 @@ help</span><br style="font-family: monospace;">
 Under root identity, launch the installation by passing '-A':<br>
 <br>
 <span style="font-family: monospace;">$ sudo
-./pdip_install.sh -A</span><br style="font-family: monospace;">
+./pdemo_install.sh -A</span><br style="font-family: monospace;">
 <br>
 <br>
 <hr style="width: 100%; height: 2px;">
@@ -784,7 +784,7 @@ home page</a>.<br>
   <li>Utilisation des pseudo-terminaux pour piloter les
 programmes interactifs - <a href="http://www.gnulinuxmag.com/index.php?2007/12/21/67-gnu-linux-magazine-france-hors-serie-34-janvier-fevrier-2008-chez-votre-marchand-de-journaux-a-partir-du-21-decembre-2007"><img style="border: 0px solid ; width: 100px; height: 31px;" alt="glmf_logo" src="glmf_logo.gif"></a> (in
 french)</li>
-  <li><a href="http://rachid.koucha.free.fr/tech_corner/pty_pdip.html">Using
+  <li><a href="http://rachid.koucha.free.fr/tech_corner/pty_pdemo.html">Using
 pseudo-terminals
 to
 control

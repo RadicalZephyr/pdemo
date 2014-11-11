@@ -1,0 +1,13 @@
+#!/bin/bash
+
+INSTALL_PREFIX=/usr/local
+
+chmod 555 ${INSTALL_PREFIX}/bin/pdemo
+chown root ${INSTALL_PREFIX}/bin/pdemo
+chgrp root ${INSTALL_PREFIX}/bin/pdemo
+chmod 444 ${INSTALL_PREFIX}/share/man/fr/man1/pdemo.1.gz
+chown root ${INSTALL_PREFIX}/share/man/fr/man1/pdemo.1.gz
+chgrp root ${INSTALL_PREFIX}/share/man/fr/man1/pdemo.1.gz
+chmod 444 ${INSTALL_PREFIX}/share/man/man1/pdemo.1.gz
+chown root ${INSTALL_PREFIX}/share/man/man1/pdemo.1.gz
+chgrp root ${INSTALL_PREFIX}/share/man/man1/pdemo.1.gz

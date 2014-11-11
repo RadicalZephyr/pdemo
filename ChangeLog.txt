@@ -4,8 +4,8 @@ Version 1.8.11 (06-Nov-2013)
         . Added 'sh' command
         . Display (flush) outstanding data when program finishes prematurely
         . Default buffer size 512 --> 4096
-        . pdip_en.1        ==> Updated the manuals
-          pdip_fr.1
+        . pdemo_en.1        ==> Updated the manuals
+          pdemo_fr.1
           index.html
 
 Version 1.8.9 (15-Jul-2012)
@@ -17,11 +17,11 @@ Version 1.8.9 (15-Jul-2012)
 Version 1.8.8 (31-Aug-2010)
 =============
         . version.cmake    ==> 1.8.7 to 1.8.8
-        . pdip.c           ==> Added option "-p" to propagate exit code of
+        . pdemo.c           ==> Added option "-p" to propagate exit code of
                                controlled program (no longer the default
                                behaviour !)
-        . pdip_en.1        ==> Updated manuals for "-p" option
-          pdip_fr.1
+        . pdemo_en.1        ==> Updated manuals for "-p" option
+          pdemo_fr.1
           index.html
 
 
@@ -30,17 +30,17 @@ Version 1.8.7 (29-Jul-2010)
 =============
 
         . version.cmake    ==> 1.8.6 to 1.8.7
-        . pdip_install.sh  ==> Little enhancements
+        . pdemo_install.sh  ==> Little enhancements
         . config.h.cmake   ==> Updated the copyright
-        . pdip.c           ==> Made the slave side of the PTY become the
+        . pdemo.c           ==> Made the slave side of the PTY become the
                                controlling terminal of the controlled
                                program
                                Added management of the control characters
                                through the notation "^character"
                                .Added new keyword "sig" to send signals to
                                the controlled program
-       . pdip_en.1         ==> Added manual of "sig" and "^character"
-         pdip_fr.1
+       . pdemo_en.1         ==> Added manual of "sig" and "^character"
+         pdemo_fr.1
          index.html
 
 
@@ -48,9 +48,9 @@ Version 1.8.6 (10-Jul-2010)
 =============
 
         . version.cmake    ==> 1.8.5 to 1.8.6
-        . pdip_install.sh  ==> Little enhancements
+        . pdemo_install.sh  ==> Little enhancements
         . config.h.cmake   ==> Updated the copyright
-          pdip.c
+          pdemo.c
 
 
 Version 1.8.5 (16-Apr-2010)
@@ -59,12 +59,12 @@ Version 1.8.5 (16-Apr-2010)
         . CMakeLists.txt   ==> Added cmake_minimum_required(VERSION 2.6) to
                                avoid warnings
         . version.cmake    ==> 1.8.1 to 1.8.5
-        . pdip.c           ==> Added 'print' command
+        . pdemo.c           ==> Added 'print' command
                            ==> Added 'dbg' command with debug level
-                           ==> Fixed pdip_write() because it didn't work
+                           ==> Fixed pdemo_write() because it didn't work
                                when multiple writes were necessary
-                           ==> pdip_read_program(): Replaced polling by a
-                               timed wait 
+                           ==> pdemo_read_program(): Replaced polling by a
+                               timed wait
                            ==> Better management of the end of the program
                            ==> Dynamic allocation of the internal buffers
                                to accept very long lines
@@ -72,8 +72,8 @@ Version 1.8.5 (16-Apr-2010)
                                child unless "-e" option is specified
                            ==> Management of background mode
                            ==> Added -t option
-        . pdip_en.1        ==> Added description of new options
-        . pdip_fr.1        ==> Idem
+        . pdemo_en.1        ==> Added description of new options
+        . pdemo_fr.1        ==> Idem
         . index.html       ==> Idem
 
 
@@ -81,20 +81,20 @@ Version 1.8.1 (10-Feb-2009)
 =============
 
         . version.cmake    ==> 1.8.0 to 1.8.1
-        . pdip.c           ==> Fixed parameter mngt of sleep keyword
+        . pdemo.c           ==> Fixed parameter mngt of sleep keyword
 
 
 Version 1.8.0 (06-Feb-2009)
 =============
 
         . version.cmake    ==> 1.7.0 to 1.8.0
-        . pdip.c           ==> Mngt of exception signals
+        . pdemo.c           ==> Mngt of exception signals
                            ==> Fixed coverity warnings/errors
                            ==> Ability top send ESC character
                            ==> Do not skip blanks in input strings
         . index.html
-        . pdip_en.1
-        . pdip_fr.1        ==> Added ESC character
+        . pdemo_en.1
+        . pdemo_fr.1        ==> Added ESC character
 
 
 Version 1.7.0 (27-Jun-2008)
@@ -103,19 +103,19 @@ Version 1.7.0 (27-Jun-2008)
         . Added version management: version.cmake, config.h.cmake
         . CMakeLists.txt   ==> Generation of config.h
         . Added AUTHORS
-        . pdip_install.sh  ==> Added new files
+        . pdemo_install.sh  ==> Added new files
 
 Version 1.6 (27-Jan-2008)
 ===========
 
-        . pdip.c           ==> Slight changes in usage() function
+        . pdemo.c           ==> Slight changes in usage() function
         . index.html       ==> Update to add a link on an article about pty
 
 Version 1.5 (25-Jan-2008)
 ===========
 
-        . pdip.c           ==> Suppressed pdip_buf test in pdip_format_params() internal function
-        . pdip_install.sh  ==> Suppressed test on user id to be able to install even if not super user
+        . pdemo.c           ==> Suppressed pdemo_buf test in pdemo_format_params() internal function
+        . pdemo_install.sh  ==> Suppressed test on user id to be able to install even if not super user
         . CMakeLists.txt   ==> Change access rights only if super user
                            ==> Better cmake rules to make "make clean" work on manuals
         . index.html       ==> Added hyperlink on sourceforge in the title
@@ -124,9 +124,6 @@ Version 1.4 (18-Jan-2008)
 ===========
 
         . Added file ChangeLog.txt
-        . pdip.c          ==> Infinite loop in pdip_write() when piloted program crashes
-        . pdip_install.sh ==> Added ChangeLog.txt
+        . pdemo.c          ==> Infinite loop in pdemo_write() when piloted program crashes
+        . pdemo_install.sh ==> Added ChangeLog.txt
                         ==> Mngt of multiple occurences of -P option on cmd line
-
-
-

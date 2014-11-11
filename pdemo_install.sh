@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Simple script to install PDIP
+# Simple script to install PDEMO
 #
 #  Copyright (C) 2007,2008 Rachid Koucha <rachid dot koucha at free dot fr>
 #
@@ -20,18 +20,18 @@
 #
 
 
-TMPDIR="/tmp/pdip_$$"
+TMPDIR="/tmp/pdemo_$$"
 
-PDIP_SOURCES="ChangeLog.txt     \
+PDEMO_SOURCES="ChangeLog.txt     \
               CMakeLists.txt    \
               FindGZIP.cmake    \
-              pdip_chown.cmake  \
-              pdip.c            \
-              pdip_deb.ctrl     \
-              pdip_deb.postinst \
-              pdip_en.1         \
-              pdip_fr.1         \
-              pdip_install.sh   \
+              pdemo_chown.cmake  \
+              pdemo.c           \
+              pdemo_deb.ctrl     \
+              pdemo_deb.postinst \
+              pdemo_en.1         \
+              pdemo_fr.1         \
+              pdemo_install.sh   \
               README.txt        \
               COPYING           \
               AUTHORS           \
@@ -72,7 +72,7 @@ echo "             -d : Installation directory (default: ${INST_DIR})"
 echo '             -P : Generate a DEB or RPM package'
 echo '             -B : Build the software'
 echo '             -I : Install the software'
-echo '             -A : Generate an archive of the software (sources)' 
+echo '             -A : Generate an archive of the software (sources)'
 echo '             -h : this help'
 } 1>&2
 }
@@ -87,9 +87,9 @@ then
 fi
 
 # Make sure that we are running in the source directory
-if [ ! -f pdip.c ]
+if [ ! -f pdemo.c ]
 then
-  echo This script must be run in the source directory of PDIP >&2
+  echo This script must be run in the source directory of PDEMO >&2
   exit 1
 fi
 
@@ -132,12 +132,12 @@ then
   which cmake > /dev/null 2>&1
   if [ $? -ne 0 ]
   then
-    echo To be able to compile/install PDIP, you must install cmake and/or update the PATH variable >&2
+    echo To be able to compile/install PDEMO, you must install cmake and/or update the PATH variable >&2
     exit 1
   fi
 
   # Launch cmake
-  echo Configuring PDIP installation in ${INST_DIR}...
+  echo Configuring PDEMO installation in ${INST_DIR}...
   cmake . -DCMAKE_INSTALL_PREFIX=${INST_DIR}
 fi
 
@@ -148,25 +148,25 @@ then
   which tar > /dev/null 2>&1
   if [ $? -ne 0 ]
   then
-    echo "To be able to generate a PDIP archive, you must install 'tar' and/or update the PATH variable" >&2
+    echo "To be able to generate a PDEMO archive, you must install 'tar' and/or update the PATH variable" >&2
     exit 1
   fi
 
   # Launch the build
   make
 
-  # Get PDIP's version
-  PDIP_VERSION=`./pdip -V | cut -d' ' -f3`
-  if [ -z "${PDIP_VERSION}" ]
+  # Get PDEMO's version
+  PDEMO_VERSION=`./pdemo -V | cut -d' ' -f3`
+  if [ -z "${PDEMO_VERSION}" ]
   then
-    echo Something went wrong while building PDIP >&2
+    echo Something went wrong while building PDEMO >&2
     exit 1
   fi
 
-  ARCHIVE_DIR=pdip-${PDIP_VERSION}
+  ARCHIVE_DIR=pdemo-${PDEMO_VERSION}
   ARCHIVE_NAME=${ARCHIVE_DIR}.tgz
   mkdir -p ${TMPDIR}/${ARCHIVE_DIR}
-  cp -R ${PDIP_SOURCES} ${TMPDIR}/${ARCHIVE_DIR}
+  cp -R ${PDEMO_SOURCES} ${TMPDIR}/${ARCHIVE_DIR}
   echo Building archive ${ARCHIVE_NAME}...
   tar cvfz ${ARCHIVE_NAME} -C ${TMPDIR} ${ARCHIVE_DIR} > /dev/null 2>&1
 
@@ -193,7 +193,7 @@ then
   which dpkg > /dev/null 2>&1
   if [ $? -ne 0 ]
   then
-    echo "To be able to generate a DEB or RPM PDIP package, you must install 'dpkg' and/or update the PATH variable" >&2
+    echo "To be able to generate a DEB or RPM PDEMO package, you must install 'dpkg' and/or update the PATH variable" >&2
     exit 1
   fi
 
@@ -203,7 +203,7 @@ then
     which alien > /dev/null 2>&1
     if [ $? -ne 0 ]
     then
-      echo "To be able to generate a RPM PDIP package, you must install 'alien' and/or update the PATH variable" >&2
+      echo "To be able to generate a RPM PDEMO package, you must install 'alien' and/or update the PATH variable" >&2
       exit 1
     fi
   fi
@@ -212,18 +212,18 @@ then
   which sed > /dev/null 2>&1
   if [ $? -ne 0 ]
   then
-    echo "To be able to generate a DEB PDIP pakage, you must install 'sed' and/or update the PATH variable" >&2
+    echo "To be able to generate a DEB PDEMO pakage, you must install 'sed' and/or update the PATH variable" >&2
     exit 1
   fi
 
   # Launch the build
   make
 
-  # Get PDIP's version
-  PDIP_VERSION=`./pdip -V | cut -d' ' -f3`
-  if [ -z "${PDIP_VERSION}" ]
+  # Get PDEMO's version
+  PDEMO_VERSION=`./pdemo -V | cut -d' ' -f3`
+  if [ -z "${PDEMO_VERSION}" ]
   then
-    echo Something went wrong while building PDIP >&2
+    echo Something went wrong while building PDEMO >&2
     exit 1
   fi
 
@@ -237,11 +237,11 @@ then
   mkdir -p ${TMPDIR}/${INST_DIR}/share/man/man1
   mkdir -p ${TMPDIR}/${INST_DIR}/share/man/fr/man1
   mkdir -p ${TMPDIR}/DEBIAN
-  cp pdip ${TMPDIR}/${INST_DIR}/bin
-  cp pdip_en.1.gz ${TMPDIR}/${INST_DIR}/share/man/man1/pdip.1.gz
-  cp pdip_fr.1.gz ${TMPDIR}/${INST_DIR}/share/man/fr/man1/pdip.1.gz
-  cat pdip_deb.ctrl | sed "s/^Version:.*$/Version: ${PDIP_VERSION}/g" > ${TMPDIR}/DEBIAN/control
-  cat pdip_deb.postinst | sed "s%^INSTALL_PREFIX=.*$%INSTALL_PREFIX=${INST_DIR}%g" > ${TMPDIR}/DEBIAN/postinst
+  cp pdemo ${TMPDIR}/${INST_DIR}/bin
+  cp pdemo_en.1.gz ${TMPDIR}/${INST_DIR}/share/man/man1/pdemo.1.gz
+  cp pdemo_fr.1.gz ${TMPDIR}/${INST_DIR}/share/man/fr/man1/pdemo.1.gz
+  cat pdemo_deb.ctrl | sed "s/^Version:.*$/Version: ${PDEMO_VERSION}/g" > ${TMPDIR}/DEBIAN/control
+  cat pdemo_deb.postinst | sed "s%^INSTALL_PREFIX=.*$%INSTALL_PREFIX=${INST_DIR}%g" > ${TMPDIR}/DEBIAN/postinst
   chmod +x ${TMPDIR}/DEBIAN/postinst
 
   # Generate the DEB package
@@ -251,7 +251,7 @@ then
   if [ ${RPM_PACKAGE_IT} != "NO" ]
   then
     echo Making the RPM package...
-    alien --to-rpm pdip_${PDIP_VERSION}_ia64.deb --scripts
+    alien --to-rpm pdemo_${PDEMO_VERSION}_ia64.deb --scripts
   fi
 
 fi
@@ -267,5 +267,3 @@ fi
 #  echo The designer didn\'t find time to implement it but it will be done soonly... >&2
 #  exit 1
 #fi
-
-

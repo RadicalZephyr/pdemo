@@ -1,13 +1,13 @@
 .\" Format this file with the following command :
-.\" groff -man -Tascii  pdip.1  (cas general )
+.\" groff -man -Tascii  pdemo.1  (cas general )
 .\"
-.TH PDIP 1  "NOVEMBER 2013" "Embedded Tools" "Processes access and control"
+.TH PDEMO 1  "NOVEMBER 2013" "Embedded Tools" "Processes access and control"
 .SH NAME
-pdip \- Programmed Dialogue with Interactive Programs
+pdemo \- Programmed Dialogue with Interactive Programs
 .SH SYNOPSIS
-.B pdip [ -s 
+.B pdemo [ -s
 .I cmdfile
-.B  ] [ -b 
+.B  ] [ -b
 .I buffer-size
 .B ] [ -d
 .I level
@@ -17,17 +17,17 @@ pdip \- Programmed Dialogue with Interactive Programs
 options parameters...
 
 .SH DESCRIPTION
-.B pdip
+.B pdemo
 is a simplified version of the famous
 .BR expect (1)
-utility. The acronym PDIP itself comes from the first lines of the manual of
+utility. The acronym PDEMO itself comes from the first lines of the manual of
 .BR expect (1).
 Like
 .BR expect (1),
 it interprets a scripting language to dialog with an interactive program as a human operator would do. But it has not all the bells and whistles of
 .BR expect (1)
 which is able to interact with multiple programs at the same time, accept a high level scripting language providing branching and high level control structures or giving back the control to the operator during a session.
-.BR pdip (1)
+.BR pdemo (1)
 accepts a very simple language on the input to provide basic functions such as:
 .RS
 .TP 2
@@ -42,13 +42,13 @@ Stopping interactions with the program during a given amount of seconds
 .RE
 .PP
 The command to launch along with its options and parameters are passed at the end of the command line. If options are passed to
-.BR pdip (1)
+.BR pdemo (1)
 and/or the command, then the command must be preceded by a double hyphen (--). Otherwise the options will be passed to
-.BR pdip (1)
+.BR pdemo (1)
 and will trigger errors.
 
 .SH USAGE
-.BR pdip (1)
+.BR pdemo (1)
 reads
 .I cmdfile
 or the standard input (default) and accepts the following commands:
@@ -128,7 +128,7 @@ Stop activity during
 seconds.
 .TP
 .BI exit
-Terminate PDIP.
+Terminate PDEMO.
 
 .TP
 .BI "sh [-s] cmd par..."
@@ -166,26 +166,26 @@ Redirect error output of the controlled program.
 
 .IP "-t | --term"
 Make
-.B pdip
+.B pdemo
 behave as a simple line mode terminal.
 
 .IP "-o | --outstand"
 Make
-.B pdip
+.B pdemo
 print unread data from the controlled program at the end of the session.
 
 .IP "-p | --propexit"
 Propagate the exit code of the controlled program to
-.BR "pdip".
+.BR "pdemo".
 This makes
-.B pdip
+.B pdemo
 exit with the exit code of the controlled program (the exit code is 1 if the
 controlled program terminates because of a signal). By default, the exit code
 of
-.B pdip
+.B pdemo
 is 0 no matter the exit code of the controlled program unless there is an
 error internal to
-.BR "pdip".
+.BR "pdemo".
 
 .SH EXAMPLES
 The following example shows how to set up a telnet connection to a given
@@ -200,7 +200,7 @@ command before disconnecting from the shell via the
 command.
 .PP
 .nf
-      $ pdip -- telnet -p 34770 remote
+      $ pdemo -- telnet -p 34770 remote
       recv "login"
       send "foo\\n"   # Login name is 'foo'
       recv "Password"
@@ -209,8 +209,8 @@ command.
       send "ls\\n"    # Launch the 'ls' command
       recv "\\$ "
       send "exit\\n"  # Exit from the shell
-      exit           # Exit from PDIP
-      $ 
+      exit           # Exit from PDEMO
+      $
 
 .fi
 
@@ -225,7 +225,7 @@ command before disconnecting from
 with the 'quit' command.
 .PP
 .nf
-      $ pdip ftp remote
+      $ pdemo ftp remote
       recv "Name"
       send "foo\\n"    # Login name is 'foo'
       recv "Password"
@@ -234,8 +234,8 @@ with the 'quit' command.
       send "help\\n"   # Launch the 'help' command
       recv "^ftp> "
       send "quit\\n"   # Terminate FTP
-      exit            # Exit from PDIP
-      $ 
+      exit            # Exit from PDEMO
+      $
 
 .fi
 The following example shows how to interact with the program
@@ -246,7 +246,7 @@ and '6*8'. Then we quit
 .BR bc (1).
 .PP
 .nf
-      $ pdip bc
+      $ pdemo bc
       recv "warranty"  # Near the end of the startup banner
       recv "$"         # End of last line of the banner
       send "3+4\\n"
@@ -256,8 +256,8 @@ and '6*8'. Then we quit
       recv "$"
       recv "$"
       send "quit\\n"   # Terminate BC
-      exit            # Exit from PDIP
-      $ 
+      exit            # Exit from PDEMO
+      $
 
 .fi
 
@@ -273,7 +273,7 @@ Then we launch the 'ls -l' command before disconnecting from
 with the 'exit' command.
 .PP
 .nf
-      $ pdip telnet remote
+      $ pdemo telnet remote
       recv "login:"
       send "foo\\n"                  # Login name is 'foo'
       recv "Password:"
@@ -282,8 +282,8 @@ with the 'exit' command.
       send "ls -l\\n"                # Launch the 'ls -l' command
       recv "^(.)+-foo-(.)+(>|> )$"
       send "exit\\n"                 # Terminate telnet
-      exit                          # Exit from PDIP
-      $ 
+      exit                          # Exit from PDEMO
+      $
 
 .fi
 

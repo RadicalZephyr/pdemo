@@ -1,7 +1,7 @@
 Introduction
 ============
 
-PDIP (Programmed Dialogue with Interactive programs) can be installed
+PDEMO (Programmed Dialogue with Interactive programs) can be installed
 in three ways:
 
 1. Installation from the sources
@@ -24,26 +24,26 @@ You can generate a zipped tar file of the sources:
   * The installation from the sources supposes that cmake is installed
     on your Linux system
 
-  * Unpack the tar compressed file pdip-xxx.tgz into a directory. This
-  will create a sub-directory called pdip-xxx with the source files of
+  * Unpack the tar compressed file pdemo-xxx.tgz into a directory. This
+  will create a sub-directory called pdemo-xxx with the source files of
   the program:
 
-    `$ tar xvfz pdip-xxx.tgz`
+    `$ tar xvfz pdemo-xxx.tgz`
 
   * Go into the newly created directory:
 
-    `$ cd pdip-xxx`
+    `$ cd pdemo-xxx`
 
-  * Make sure the file pdip_install.sh has the execute permission:
+  * Make sure the file pdemo_install.sh has the execute permission:
 
-    `$ chmod +x pdip_install.sh`
+    `$ chmod +x pdemo_install.sh`
 
-  * Launch the script pdip_install.sh to get the help:
+  * Launch the script pdemo_install.sh to get the help:
 
 ``` bash
-$ ./pdip_install.sh -h
+$ ./pdemo_install.sh -h
 
-Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
+Usage: pdemo_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
          -d : Installation directory (default: /usr/local)
          -P : Generate a DEB or RPM package
@@ -57,21 +57,21 @@ Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
   specify an installation directory different than '/usr/local':
   For example, for an installation in '/usr/local', type:
 
-    `$ sudo ./pdip_install.sh -I`
+    `$ sudo ./pdemo_install.sh -I`
 
   For an installation in '/usr', type;
 
-    `$ sudo ./pdip_install.sh -I -d /usr`
+    `$ sudo ./pdemo_install.sh -I -d /usr`
 
 
-  * If your PATH variable is correctly set, PDIP help can be displayed:
+  * If your PATH variable is correctly set, PDEMO help can be displayed:
 
-    `$ pdip --help`
+    `$ pdemo --help`
 
-  * If your MANPATH variable is correctly set, PDIP's online manual can
+  * If your MANPATH variable is correctly set, PDEMO's online manual can
 be displayed:
 
-    `$ man pdip`
+    `$ man pdemo`
 
 
 2. Installation of the binaries from the DEB package
@@ -79,7 +79,7 @@ be displayed:
 
 The files are installed via the command:
 
-    $ sudo dpkg -i pdip-xxx.deb
+    $ sudo dpkg -i pdemo-xxx.deb
 
 
 3. Installation of the binaries from the RPM package
@@ -87,7 +87,7 @@ The files are installed via the command:
 
 The files are installed via the command:
 
-    $ sudo rpm -i pdip-xxx.rpm
+    $ sudo rpm -i pdemo-xxx.rpm
 
 
 4. Generation of a DEB binary package
@@ -96,26 +96,26 @@ The files are installed via the command:
   * The installation from the sources supposes that cmake is installed
     on your Linux system
 
-  * Unpack the tar compressed file pdip-xxx.tgz into a directory. This
-    will create a sub-directory called pdip-xxx with the source files
+  * Unpack the tar compressed file pdemo-xxx.tgz into a directory. This
+    will create a sub-directory called pdemo-xxx with the source files
     of the program:
 
-    `$ tar xvfz pdip-xxx.tgz`
+    `$ tar xvfz pdemo-xxx.tgz`
 
   * Go into the newly created directory:
 
-    `$ cd pdip-xxx`
+    `$ cd pdemo-xxx`
 
-  * Make sure the file pdip_install.sh has the execute permission:
+  * Make sure the file pdemo_install.sh has the execute permission:
 
-    `$ chmod +x pdip_install.sh`
+    `$ chmod +x pdemo_install.sh`
 
-  * Launch the script pdip_install.sh to get the help:
+  * Launch the script pdemo_install.sh to get the help:
 
 ``` bash
-$ ./pdip_install.sh -h
+$ ./pdemo_install.sh -h
 
-Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
+Usage: pdemo_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
          -d : Installation directory (default: /usr/local)
          -P : Generate a DEB or RPM package
@@ -130,11 +130,11 @@ Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
   than '/usr/local': For example, for a package which will be
   installed in '/usr/local', type:
 
-    `$ sudo ./pdip_install.sh -P DEB`
+    `$ sudo ./pdemo_install.sh -P DEB`
 
   For an installation in '/usr', type;
 
-    `$ sudo ./pdip_install.sh -P DEB -d /usr`
+    `$ sudo ./pdemo_install.sh -P DEB -d /usr`
 
 
 
@@ -144,26 +144,26 @@ Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
   * The installation from the sources supposes that cmake is installed
     on your Linux system
 
-  * Unpack the tar compressed file pdip-xxx.tgz into a directory. This
-    will create a sub-directory called pdip-xxx with the source files
+  * Unpack the tar compressed file pdemo-xxx.tgz into a directory. This
+    will create a sub-directory called pdemo-xxx with the source files
     of the program:
 
-    `$ tar xvfz pdip-xxx.tgz`
+    `$ tar xvfz pdemo-xxx.tgz`
 
   * Go into the newly created directory:
 
-    `$ cd pdip-xxx`
+    `$ cd pdemo-xxx`
 
-  * Make sure the file pdip_install.sh has the execute permission:
+  * Make sure the file pdemo_install.sh has the execute permission:
 
-    `$ chmod +x pdip_install.sh`
+    `$ chmod +x pdemo_install.sh`
 
-  * Launch the script pdip_install.sh to get the help:
+  * Launch the script pdemo_install.sh to get the help:
 
 ``` bash
-$ ./pdip_install.sh -h
+$ ./pdemo_install.sh -h
 
-Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
+Usage: pdemo_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
          -d : Installation directory (default: /usr/local)
          -P : Generate a DEB or RPM package
@@ -178,11 +178,11 @@ Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
   than '/usr/local': For example, for a package which will be
   installed in '/usr/local', type:
 
-    `$ sudo ./pdip_install.sh -P RPM`
+    `$ sudo ./pdemo_install.sh -P RPM`
 
   For an installation in '/usr', type;
 
-    `$ sudo ./pdip_install.sh -P RPM -d /usr`
+    `$ sudo ./pdemo_install.sh -P RPM -d /usr`
 
 
 
@@ -192,26 +192,26 @@ Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
   * The installation from the sources supposes that cmake is installed
     on your Linux system
 
-  * Unpack the tar compressed file pdip-xxx.tgz into a directory. This
-    will create a sub-directory called pdip-xxx with the source files
+  * Unpack the tar compressed file pdemo-xxx.tgz into a directory. This
+    will create a sub-directory called pdemo-xxx with the source files
     of the program:
 
-    `$ tar xvfz pdip-xxx.tgz`
+    `$ tar xvfz pdemo-xxx.tgz`
 
   * Go into the newly created directory:
 
-    `$ cd pdip-xxx`
+    `$ cd pdemo-xxx`
 
-  * Make sure the file pdip_install.sh has the execute permission:
+  * Make sure the file pdemo_install.sh has the execute permission:
 
-    `$ chmod +x pdip_install.sh`
+    `$ chmod +x pdemo_install.sh`
 
-  * Launch the script pdip_install.sh to get the help:
+  * Launch the script pdemo_install.sh to get the help:
 
 ``` bash
-$ ./pdip_install.sh -h
+$ ./pdemo_install.sh -h
 
-Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
+Usage: pdemo_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
          -d : Installation directory (default: /usr/local)
          -P : Generate a DEB or RPM package
@@ -223,4 +223,4 @@ Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
   * Under root identity, launch the installation by passing '-A':
 
-    `$ sudo ./pdip_install.sh -A`
+    `$ sudo ./pdemo_install.sh -A`

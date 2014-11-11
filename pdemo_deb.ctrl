@@ -1,5 +1,5 @@
-Package: pdip
+Package: pdemo
 Version: 1.0
 Maintainer: Rachid Koucha <rachid dot koucha at free dot fr>
-Description: PDIP (Programmed Dialogue with Interactive Programs)
+Description: PDEMO (Programmed Dialogue with Interactive Programs)
 Architecture: ia64

@@ -1,5 +1,5 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// File        : pdip.c
+// File        : pdemo.c
 // Description : Programmed Dialogue with Interactive Programs
 // License     :
 //
@@ -49,9 +49,9 @@
 //                               - Added -V = version
 //     19-Oct-2007 R. Koucha     - Fixed pb of failed exec program
 //                                 (cf. comment above the definition
-//                                 of pdip_chld_failed_on_exec)
+//                                 of pdemo_chld_failed_on_exec)
 //     25-Nov-2007 R. Koucha     - Fixed management of offset in
-//                                 pdip_read_line()
+//                                 pdemo_read_line()
 //     14-Dec-2007 R. Koucha     - Support of POSIX regular expressions
 //                               - Exit 1 on timeout
 //                               - Better management of the string
@@ -59,7 +59,7 @@
 //                                 them
 //                               - Command to launch directly on the
 //                                 command line
-//     18-Jan-2008 R. Koucha     - Fixed infinite loop in pdip_write()
+//     18-Jan-2008 R. Koucha     - Fixed infinite loop in pdemo_write()
 //                                 when output file descriptor becomes
 //                                 invalid (e.g. remote program crashed)
 //                                 and so, write() returns -1
@@ -67,16 +67,16 @@
 //     21-Apr-2008 R. Koucha     - Mngt of exception signals
 //     24-Apr-2008 R. Koucha     - Suppressed the debug print in SIGCHLD
 //                                 handler
-//     06-Feb-2009 R. Koucha     - pdip_handle_synchro(): do not skip blank
+//     06-Feb-2009 R. Koucha     - pdemo_handle_synchro(): do not skip blank
 //                                 chars !
 //                               - Added ability to send ESC = 'CTRL [' control
 //                                 character
 //     10-Feb-2009 R. Koucha     - Fixed parameter mngt of sleep keyword
 //     19-Aug-2009 R. Koucha     - Added 'print' command
 //                               - Added 'dbg' command with debug level
-//                               - Fixed pdip_write() because it didn't work
+//                               - Fixed pdemo_write() because it didn't work
 //                                 when multiple writes were necessary
-//                               - pdip_read_program(): Replaced polling by a
+//                               - pdemo_read_program(): Replaced polling by a
 //                                 timed wait
 //                               - Better management of the end of the program
 //                               - Dynamic allocation of the internal buffers
@@ -125,46 +125,46 @@
 
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_debug
+// Name   : pdemo_debug
 // Usage  : Debug level
 // ----------------------------------------------------------------------------
-static int pdip_debug;
+static int pdemo_debug;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_in
-// Usage  : Input of PDIP (terminal or script)
+// Name   : pdemo_in
+// Usage  : Input of PDEMO (terminal or script)
 // ----------------------------------------------------------------------------
-static int pdip_in;
+static int pdemo_in;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_out
-// Usage  : Output of PDIP (terminal)
+// Name   : pdemo_out
+// Usage  : Output of PDEMO (terminal)
 // ----------------------------------------------------------------------------
-static int pdip_out;
+static int pdemo_out;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_err
-// Usage  : Error output of PDIP (terminal)
+// Name   : pdemo_err
+// Usage  : Error output of PDEMO (terminal)
 // ----------------------------------------------------------------------------
-static int pdip_err;
+static int pdemo_err;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_pty
+// Name   : pdemo_pty
 // Usage  : Master side of the pseudo-terminal
 // ----------------------------------------------------------------------------
-static int pdip_pty = -1;
+static int pdemo_pty = -1;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_background_in
+// Name   : pdemo_background_in
 // Usage  : Set to 1 if background mode and input is the terminal
 // ----------------------------------------------------------------------------
-static int pdip_background_in;
+static int pdemo_background_in;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_background_out
+// Name   : pdemo_background_out
 // Usage  : Set to 1 if background mode and output is the terminal
 // ----------------------------------------------------------------------------
-static int pdip_background_out;
+static int pdemo_background_out;
 
 // ----------------------------------------------------------------------------
 // Name   : environ
@@ -173,122 +173,122 @@ static int pdip_background_out;
 extern char **environ;
 
 // ----------------------------------------------------------------------------
-// Name   : PDIP_COMMENT
+// Name   : PDEMO_COMMENT
 // Usage  : Comment marker on the command line
 // ----------------------------------------------------------------------------
-#define PDIP_COMMENT  '#'
+#define PDEMO_COMMENT  '#'
 
 // ----------------------------------------------------------------------------
-// Name   : PDIP_ERR
+// Name   : PDEMO_ERR
 // Usage  : Error messages
 // ----------------------------------------------------------------------------
-#define PDIP_ERR(format, ...) do { if (!pdip_background_out)            \
+#define PDEMO_ERR(format, ...) do { if (!pdemo_background_out)            \
             fprintf(stderr,                                             \
-                    "PDIP(%d) ERROR (%s#%d): "format,                   \
+                    "PDEMO(%d) ERROR (%s#%d): "format,                   \
                     getpid(), __FUNCTION__, __LINE__, ## __VA_ARGS__);  \
     } while (0)
 
 // ----------------------------------------------------------------------------
-// Name   : PDIP_DBG/DUMP
+// Name   : PDEMO_DBG/DUMP
 // Usage  : Debug messages
 // ----------------------------------------------------------------------------
-#define PDIP_DBG(level, format, ...) do { if (!pdip_background_out && (pdip_debug >= level)) \
+#define PDEMO_DBG(level, format, ...) do { if (!pdemo_background_out && (pdemo_debug >= level)) \
             fprintf(stderr,                                             \
-                    "\nPDIP_DBG(%d-%d) - %s#%d: "format,                \
+                    "\nPDEMO_DBG(%d-%d) - %s#%d: "format,                \
                     getpid(), level,                                    \
                     __FUNCTION__, __LINE__, ## __VA_ARGS__);            \
     } while(0)
 
-#define PDIP_DUMP(level, b, l) do { if (!pdip_background_out && (pdip_debug >= level)) \
-        {  pdip_dump((b), (l)); }                                       \
+#define PDEMO_DUMP(level, b, l) do { if (!pdemo_background_out && (pdemo_debug >= level)) \
+        {  pdemo_dump((b), (l)); }                                       \
     } while(0)
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_version
+// Name   : pdemo_version
 // Usage  : Version of the software
 // ----------------------------------------------------------------------------
-static const char *pdip_version = "1.8.11";
+static const char *pdemo_version = "1.8.11";
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_bufsz
+// Name   : pdemo_bufsz
 // Usage  : I/O buffer size
 // ----------------------------------------------------------------------------
-static unsigned int pdip_bufsz;
-#define PDIP_DEF_BUFSZ   4096
+static unsigned int pdemo_bufsz;
+#define PDEMO_DEF_BUFSZ   4096
 
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_buf
+// Name   : pdemo_buf
 // Usage  : I/O buffer
 // ----------------------------------------------------------------------------
-static char *pdip_buf;
-static char *pdip_buf1;
+static char *pdemo_buf;
+static char *pdemo_buf1;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_outstanding_buf
+// Name   : pdemo_outstanding_buf
 // Usage  : Buffer of data in which the synchro string is looked for before
 //          being printed out
 // ----------------------------------------------------------------------------
-static char         *pdip_outstanding_buf;
-static unsigned int  pdip_outstanding_buf_sz;
-static unsigned int  pdip_loutstanding;
+static char         *pdemo_outstanding_buf;
+static unsigned int  pdemo_outstanding_buf_sz;
+static unsigned int  pdemo_loutstanding;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_argv/argc/argv_nb
+// Name   : pdemo_argv/argc/argv_nb
 // Usage  : Parameter table
 // ----------------------------------------------------------------------------
-static char **pdip_argv    = NULL;
-static int    pdip_argc    = 0;
-static int    pdip_argv_nb = 0;
+static char **pdemo_argv    = NULL;
+static int    pdemo_argc    = 0;
+static int    pdemo_argv_nb = 0;
 
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_pid
+// Name   : pdemo_pid
 // Usage  : Process id of the piloted child
 // ----------------------------------------------------------------------------
-static pid_t pdip_pid = -1;
+static pid_t pdemo_pid = -1;
 
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_dead_prog
+// Name   : pdemo_dead_prog
 // Usage  : Set to one when the sub-process (program) dies
 // ----------------------------------------------------------------------------
-static int pdip_dead_prog = 1;
+static int pdemo_dead_prog = 1;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_exit_prog
-// Usage  : Exit code of the dead program to propagate to PDIP
+// Name   : pdemo_exit_prog
+// Usage  : Exit code of the dead program to propagate to PDEMO
 // ----------------------------------------------------------------------------
-static int pdip_exit_prog = 0;
+static int pdemo_exit_prog = 0;
 
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_chld_failed_on_exec
+// Name   : pdemo_chld_failed_on_exec
 // Usage  : 0, if child OK
 //          1, if child failed on exec while father was forking
 // Note   :
 //          If the child fails because of a bad pathname for the name
 //          of the program to exec, fork() will be interrupted in the
-//          father and so, pdip_pid will not be assigned before going
+//          father and so, pdemo_pid will not be assigned before going
 //          into the SIGCHLD handler.
 //          Moreover, fork() does not return any error but the pid
 //          of the terminated process !!!! Hence, the global variable
-//          pdip_chld_failed_on_exec that we set in the signal handler
+//          pdemo_chld_failed_on_exec that we set in the signal handler
 //          if we face this situation.
 //
 //          I discovered this behaviour because my program was hanging. I
 //          launched the debugger to attach the process and the call stack
-//          showed that I was in the assert(pdip_pid == pid) of the signal
-//          handler: pdip_pid was still with -1 value whereas pid (the return
+//          showed that I was in the assert(pdemo_pid == pid) of the signal
+//          handler: pdemo_pid was still with -1 value whereas pid (the return
 //          code of waitpid() was the process id of the dead child)
 // ----------------------------------------------------------------------------
-static int pdip_chld_failed_on_exec = 0;
+static int pdemo_chld_failed_on_exec = 0;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_longops
+// Name   : pdemo_longops
 // Usage  : Option on the command line
 // ----------------------------------------------------------------------------
-static struct option pdip_longopts[] =
+static struct option pdemo_longopts[] =
     {
         { "script",     required_argument, NULL, 's' },
         { "bufsz",      required_argument, NULL, 'b' },
@@ -306,10 +306,10 @@ static struct option pdip_longopts[] =
 
 
 //---------------------------------------------------------------------------
-// Name : pdip_help
+// Name : pdemo_help
 // Usage: Display help
 //----------------------------------------------------------------------------
-static void pdip_help(char *prog)
+static void pdemo_help(char *prog)
 {
     char *p = basename(prog);
 
@@ -349,7 +349,7 @@ static void pdip_help(char *prog)
             "\t\t  send \"w1 w2...\"    -- Send the string \"w1 w2...\" to the program\n"
             "\t\t  sig SIGNAME        -- Send the signal SIGNAME to the program\n"
             "\t\t  sleep x            -- Stop activity during x seconds\n"
-            "\t\t  exit               -- Terminate PDIP\n"
+            "\t\t  exit               -- Terminate PDEMO\n"
             "\t\t  print \"w1 w2...\"   -- Display the string \"w1 w2...\" on standard output\n"
             "\t\t  dbg level          -- Set the debug level\n"
             "\t\t  sh [-s] cmd par... -- Launch the shell command \"cmd par...\" (synchronously\n"
@@ -363,33 +363,33 @@ static void pdip_help(char *prog)
             "\t-p | --propexit          : Propagate the exit code of the controlled program\n"
             "\t-h | --help              : This help\n"
             ,
-            p, pdip_version,
+            p, pdemo_version,
             p,
             p,
             p,
             p,
-            PDIP_DEF_BUFSZ
+            PDEMO_DEF_BUFSZ
             );
-} // pdip_help
+} // pdemo_help
 
 
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_free_argv
+// Name   : pdemo_free_argv
 // Usage  : Deallocate the parameter table
 // Return : None
 // ----------------------------------------------------------------------------
-static void pdip_free_argv(void)
+static void pdemo_free_argv(void)
 {
-    assert(pdip_argv_nb >= 0);
-    if (pdip_argv_nb)
+    assert(pdemo_argv_nb >= 0);
+    if (pdemo_argv_nb)
     {
-        free(pdip_argv);
+        free(pdemo_argv);
     }
-    pdip_argv = NULL;
-    pdip_argc = 0;
-    pdip_argv_nb = 0;
-} // pdip_free_argv
+    pdemo_argv = NULL;
+    pdemo_argc = 0;
+    pdemo_argv_nb = 0;
+} // pdemo_free_argv
 
 
 // ----------------------------------------------------------------------------
@@ -424,11 +424,11 @@ static unsigned int blk_size = 512U;
 static unsigned int absLineNumber = 0;
 
 // ----------------------------------------------------------------------------
-// Name   : pdip_dump
+// Name   : pdemo_dump
 // Usage  : Dump a memory zone on stderr
 // Return : None
 // ----------------------------------------------------------------------------
-void pdip_dump(
+void pdemo_dump(
                char         *buf,
                unsigned int  size_buf
                )
@@ -567,16 +567,16 @@ void pdip_dump(
 
         fprintf(stderr, "%s\n", line);
     } /* end if last_line */
-} // pdip_dump
+} // pdemo_dump
 
 
 #if 0
 
 //----------------------------------------------------------------------------
-// Name        : pdip_reset_sigchld
+// Name        : pdemo_reset_sigchld
 // Description : Unset the handlers for the signals
 //----------------------------------------------------------------------------
-static void pdip_reset_sigchld(void)
+static void pdemo_reset_sigchld(void)
 {
     sighandler_t p;
     int          err_sav;
@@ -585,21 +585,21 @@ static void pdip_reset_sigchld(void)
     if (SIG_ERR == p)
     {
         err_sav = errno;
-        PDIP_ERR("Error '%m' (%d) on signal()\n", errno);
+        PDEMO_ERR("Error '%m' (%d) on signal()\n", errno);
         errno = err_sav;
         return;
     }
 
-} // pdip_reset_sigchld
+} // pdemo_reset_sigchld
 
 #endif // 0
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_kill_chld
+// Name        : pdemo_kill_chld
 // Description : Terminate the child process
 //----------------------------------------------------------------------------
-static void pdip_kill_chld(void)
+static void pdemo_kill_chld(void)
 {
     int status;
 
@@ -609,20 +609,20 @@ static void pdip_kill_chld(void)
     //                the sub-process is detached to belong to init and
     //                will live sometimes before the cyclic cleanup of init
     //
-    //pdip_reset_sigchld();
+    //pdemo_reset_sigchld();
 
     // If the child process was not finished just before the reset of SIGCHLD
-    if (!pdip_dead_prog)
+    if (!pdemo_dead_prog)
     {
-        kill(pdip_pid, SIGTERM);
+        kill(pdemo_pid, SIGTERM);
         sleep(1);
 
         // The signal handler for SIGCHLD may be triggered if the child dies
 
         // If the sub-process didn't died ==> SIGKILL
-        if (!pdip_dead_prog)
+        if (!pdemo_dead_prog)
         {
-            kill(pdip_pid, SIGKILL);
+            kill(pdemo_pid, SIGKILL);
         }
 
         // The SIGCHLD signal handler must be triggered
@@ -632,20 +632,20 @@ static void pdip_kill_chld(void)
         // that the sub-process will not become a zombie)
         (void)waitpid(-1, &status, 0);
     }
-} // pdip_kill_chld
+} // pdemo_kill_chld
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_sig_tt
+// Name        : pdemo_sig_tt
 // Description : Signal handler for SIGTTIN/OU
 //----------------------------------------------------------------------------
-static void pdip_sig_tt(int sig)
+static void pdemo_sig_tt(int sig)
 {
     switch(sig)
     {
     case SIGTTOU : // Attempt to write to terminal while in background mode
         {
-            pdip_background_out = 1;
+            pdemo_background_out = 1;
 
             (void)signal(SIGTTOU, SIG_DFL);
         }
@@ -653,7 +653,7 @@ static void pdip_sig_tt(int sig)
 
     case SIGTTIN : // Attempt to read from terminal while in background mode
         {
-            pdip_background_in = 1;
+            pdemo_background_in = 1;
 
             // This will make subsequent reads from terminal fail with EIO
             (void)signal(SIGTTIN, SIG_IGN);
@@ -665,17 +665,17 @@ static void pdip_sig_tt(int sig)
             assert(0);
         }
     } // End switch
-} // pdip_sig_tt
+} // pdemo_sig_tt
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_read
+// Name        : pdemo_read
 // Description : Read input data
 // Return      : Number of read bytes if OK
 //               -1, if error
 //               -2, if background mode
 //----------------------------------------------------------------------------
-static int pdip_read(
+static int pdemo_read(
                      int           fd,
                      char         *buf,
                      unsigned int  l
@@ -696,30 +696,30 @@ static int pdip_read(
 
             // If launched in background and the input is the
             // terminal, we will receive a SIGTTIN. The signal handler
-            // will set pdip_background_in to 1
-            if ((pdip_in == fd) && (pdip_background_in))
+            // will set pdemo_background_in to 1
+            if ((pdemo_in == fd) && (pdemo_background_in))
             {
                 return -2;
             }
 
             err_sav = errno;
-            //PDIP_ERR("Error '%m' (%d) on read(fd:%d, l:%u)\n", errno, fd, l);
+            //PDEMO_ERR("Error '%m' (%d) on read(fd:%d, l:%u)\n", errno, fd, l);
             errno = err_sav;
             return -1;
         }
     } while (rc < 0);
 
     return rc;
-} // pdip_read
+} // pdemo_read
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_read_to
+// Name        : pdemo_read_to
 // Description : Read input data with a timeout
 // Return      : Number of read bytes if OK
 //               -1, if error (errno set to ETIMEDOUT if timeout)
 //----------------------------------------------------------------------------
-int pdip_read_to(
+int pdemo_read_to(
                  int           fd,
                  char         *buf,
                  unsigned int  l,
@@ -765,55 +765,55 @@ int pdip_read_to(
         {
             assert(FD_ISSET(fd, &fdset));
 
-            return pdip_read(fd, buf, l);
+            return pdemo_read(fd, buf, l);
         }
         break;
     } // End switch
 
     return rc;
-} // pdip_read_to
+} // pdemo_read_to
 
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_dump_outstanding_data
+// Name        : pdemo_dump_outstanding_data
 // Description : Get latest data from program
 //----------------------------------------------------------------------------
-static void pdip_dump_outstanding_data(void)
+static void pdemo_dump_outstanding_data(void)
 {
     int rc;
 
-    PDIP_DBG(0, "Outstanding data from program are:\n");
+    PDEMO_DBG(0, "Outstanding data from program are:\n");
 
-    if (pdip_loutstanding)
+    if (pdemo_loutstanding)
     {
-        PDIP_DUMP(0, pdip_outstanding_buf, pdip_loutstanding);
+        PDEMO_DUMP(0, pdemo_outstanding_buf, pdemo_loutstanding);
     }
 
-    if (pdip_pty >= 0)
+    if (pdemo_pty >= 0)
     {
         do
         {
-            rc = pdip_read_to(pdip_pty,
-                              pdip_buf,
-                              pdip_bufsz,
+            rc = pdemo_read_to(pdemo_pty,
+                              pdemo_buf,
+                              pdemo_bufsz,
                               0);
 
             if (rc > 0)
             {
-                PDIP_DUMP(0, pdip_buf, (unsigned int)rc);
+                PDEMO_DUMP(0, pdemo_buf, (unsigned int)rc);
             }
         } while (rc > 0);
     }
 
-} // pdip_dump_outstanding_data
+} // pdemo_dump_outstanding_data
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_sig_chld
+// Name        : pdemo_sig_chld
 // Description : Signal handler for death of child
 //----------------------------------------------------------------------------
-static void pdip_sig_chld(int sig)
+static void pdemo_sig_chld(int sig)
 {
     pid_t pid;
     int   status;
@@ -823,32 +823,32 @@ static void pdip_sig_chld(int sig)
     // Get the status of the child
     pid = waitpid(-1, &status, WNOHANG);
 
-    PDIP_DBG(6, "Received SIGCHLD signal from process %d\n", pid);
+    PDEMO_DBG(6, "Received SIGCHLD signal from process %d\n", pid);
 
     // If error
     if (-1 == pid)
     {
-        //PDIP_ERR("Error %d '%m' from waitpid()\n", errno);
+        //PDEMO_ERR("Error %d '%m' from waitpid()\n", errno);
         assert(ECHILD == errno);
         return;
     }
 
     // If it is an asynchronous program
-    if (pdip_pid != pid)
+    if (pdemo_pid != pid)
     {
         if (WIFEXITED(status))
         {
-            PDIP_DBG(2, "Sub process with pid %d exited with code %d\n", pid, WEXITSTATUS(status));
+            PDEMO_DBG(2, "Sub process with pid %d exited with code %d\n", pid, WEXITSTATUS(status));
         }
         else
         {
             if (WIFSIGNALED(status))
             {
-                PDIP_DBG(1, "Sub process with pid %d finished with signal %d%s\n", pid, WTERMSIG(status), (WCOREDUMP(status) ? " (core dumped)" : ""));
+                PDEMO_DBG(1, "Sub process with pid %d finished with signal %d%s\n", pid, WTERMSIG(status), (WCOREDUMP(status) ? " (core dumped)" : ""));
             }
             else
             {
-                PDIP_DBG(1, "Sub process with pid %d finished in error\n", pid);
+                PDEMO_DBG(1, "Sub process with pid %d finished in error\n", pid);
             }
         }
 
@@ -856,9 +856,9 @@ static void pdip_sig_chld(int sig)
     }
 
     // We must have at least one child
-    if (-1 != pdip_pid)
+    if (-1 != pdemo_pid)
     {
-        // When PDIP encounters en EOF on its standard input, it closes
+        // When PDEMO encounters en EOF on its standard input, it closes
         // the PTY. This triggers an EOF on the program's side which may
         // finish as well. So, the waitpid() in the main() function catches
         // the status of the dead program and we receive a SIGCHLD to trigger
@@ -868,41 +868,41 @@ static void pdip_sig_chld(int sig)
         {
             if (WIFEXITED(status))
             {
-                pdip_exit_prog = WEXITSTATUS(status);
+                pdemo_exit_prog = WEXITSTATUS(status);
 
                 // Debug message if normal exit or debug activated
-                PDIP_DBG(1, "Sub process with pid %d exited with code %d\n", pid, pdip_exit_prog);
+                PDEMO_DBG(1, "Sub process with pid %d exited with code %d\n", pid, pdemo_exit_prog);
 
                 // If error and debug not activated, force an error message
-                if (pdip_exit_prog != 0)
+                if (pdemo_exit_prog != 0)
                 {
-                    if (0 == pdip_debug)
+                    if (0 == pdemo_debug)
                     {
-                        PDIP_DBG(0, "Sub process with pid %d exited with code %d\n", pid, pdip_exit_prog);
+                        PDEMO_DBG(0, "Sub process with pid %d exited with code %d\n", pid, pdemo_exit_prog);
                     }
 
                     // If error, dump the outstanding data in case
                     // error messages from the program are available
-                    // pdip_dump_outstanding_data();
+                    // pdemo_dump_outstanding_data();
                 }
             }
             else
             {
                 if (WIFSIGNALED(status))
                 {
-                    PDIP_ERR("Sub process with pid %d finished with signal %d%s\n", pid, WTERMSIG(status), (WCOREDUMP(status) ? " (core dumped)" : ""));
+                    PDEMO_ERR("Sub process with pid %d finished with signal %d%s\n", pid, WTERMSIG(status), (WCOREDUMP(status) ? " (core dumped)" : ""));
                 }
                 else
                 {
-                    PDIP_ERR("Sub process with pid %d finished in error\n", pid);
+                    PDEMO_ERR("Sub process with pid %d finished in error\n", pid);
                 }
 
                 // Default error exit code
-                pdip_exit_prog = 1;
+                pdemo_exit_prog = 1;
 
                 // Dump the outstanding data in case error messages from
                 // the program are available
-                //pdip_dump_outstanding_data();
+                //pdemo_dump_outstanding_data();
             } // End if exited
         }
         else
@@ -913,51 +913,51 @@ static void pdip_sig_chld(int sig)
     else
     {
         // We failed inside the fork() ==> See comment above
-        // pdip_chld_failed_on_exec definition
-        PDIP_DBG(1, "Child %d finished in error\n", pid);
-        pdip_chld_failed_on_exec = 1;
+        // pdemo_chld_failed_on_exec definition
+        PDEMO_DBG(1, "Child %d finished in error\n", pid);
+        pdemo_chld_failed_on_exec = 1;
 
         // Default error exit code
-        pdip_exit_prog = 1;
+        pdemo_exit_prog = 1;
 
         return;
     }
 
     // Warn the father
-    pdip_dead_prog = 1;
+    pdemo_dead_prog = 1;
 
     // Make sure that only one child is reported
     pid = waitpid(-1, &status, WNOHANG);
 
     // We must not have any terminated child
     assert((0 == pid) || ((-1 == pid) && (ECHILD == errno)));
-} // pdip_sig_chld
+} // pdemo_sig_chld
 
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_sig_alarm
+// Name        : pdemo_sig_alarm
 // Description : Signal handler for ALARM
 //----------------------------------------------------------------------------
-static void pdip_sig_alarm(int sig)
+static void pdemo_sig_alarm(int sig)
 {
     assert(SIGALRM == sig);
 
-    PDIP_DBG(4, "Timeout while waiting for child\n");
+    PDEMO_DBG(4, "Timeout while waiting for child\n");
 
-    pdip_kill_chld();
+    pdemo_kill_chld();
 
     exit(1);
-} // pdip_sig_alarm
+} // pdemo_sig_alarm
 
 
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_capture_sigchld
+// Name        : pdemo_capture_sigchld
 // Description : Set the handlers for the SIGCHLD signal
 //----------------------------------------------------------------------------
-static void pdip_capture_sigchld(void)
+static void pdemo_capture_sigchld(void)
 {
     struct sigaction    action;
     sigset_t            sig_set;
@@ -970,25 +970,25 @@ static void pdip_capture_sigchld(void)
 
     // Set the handler for SIGCHLD
     memset(&action, 0, sizeof(action));
-    action.sa_handler   = pdip_sig_chld;
+    action.sa_handler   = pdemo_sig_chld;
     action.sa_mask      = sig_set;
     action.sa_flags     = SA_NOCLDSTOP | SA_RESTART | SA_RESETHAND;
     rc = sigaction(SIGCHLD, &action, NULL);
     if (0 != rc)
     {
         err_sav = errno;
-        PDIP_ERR("Error '%m' (%d) on sigaction()\n", errno);
+        PDEMO_ERR("Error '%m' (%d) on sigaction()\n", errno);
         errno = err_sav;
         return;
     }
-} // pdip_capture_sigchld
+} // pdemo_capture_sigchld
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_sig_exception
+// Name        : pdemo_sig_exception
 // Description : Exception handler
 //----------------------------------------------------------------------------
-static void pdip_sig_exception(
+static void pdemo_sig_exception(
                                int        sig,
                                siginfo_t *info,
                                void      *context
@@ -1009,17 +1009,17 @@ static void pdip_sig_exception(
       generated by a process and si_pid and si_uid,  respectively, indicate
       the process ID and the real user ID of the sender.
     */
-    PDIP_ERR("PDIP crashed with signal %d at address %p\n", sig, info->si_addr);
+    PDEMO_ERR("PDEMO crashed with signal %d at address %p\n", sig, info->si_addr);
 
     abort();
-} // pdip_sig_exception
+} // pdemo_sig_exception
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_capture_exception_sig
+// Name        : pdemo_capture_exception_sig
 // Description : Set the handlers for the exception signals
 //----------------------------------------------------------------------------
-static void pdip_capture_exception_sig(void)
+static void pdemo_capture_exception_sig(void)
 {
     struct sigaction    action;
     sigset_t            sig_set;
@@ -1041,14 +1041,14 @@ static void pdip_capture_exception_sig(void)
     while (sigs[i])
     {
         memset(&action, 0, sizeof(action));
-        action.sa_sigaction = pdip_sig_exception;
+        action.sa_sigaction = pdemo_sig_exception;
         action.sa_mask      = sig_set;
         action.sa_flags     = SA_NOCLDSTOP | SA_RESTART | SA_RESETHAND | SA_SIGINFO;
         rc = sigaction(sigs[i], &action, NULL);
         if (0 != rc)
         {
             err_sav = errno;
-            PDIP_ERR("Error '%m' (%d) on sigaction()\n", errno);
+            PDEMO_ERR("Error '%m' (%d) on sigaction()\n", errno);
             errno = err_sav;
             return;
         }
@@ -1056,21 +1056,21 @@ static void pdip_capture_exception_sig(void)
         i ++;
     } // End while
 
-} // pdip_capture_exception_sig
+} // pdemo_capture_exception_sig
 
 
 
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_read_line
+// Name        : pdemo_read_line
 // Description : Read input data from 'fd' until end of line or end of file
 //               or when 'l' chars have been read
 // Return      : Number of read bytes if OK
 //               -1, if error
 //               -2, if background mode
 //----------------------------------------------------------------------------
-static int pdip_read_line(
+static int pdemo_read_line(
                           int           fd,
                           char         *buf,
                           unsigned int  l
@@ -1084,11 +1084,11 @@ static int pdip_read_line(
 
     do
     {
-        rc = pdip_read(fd, &(buf[offset]), 1);
+        rc = pdemo_read(fd, &(buf[offset]), 1);
         if (-1 == rc)
         {
             err_sav = errno;
-            PDIP_ERR("Error '%m' (%d) on read(%d)\n", errno, fd);
+            PDEMO_ERR("Error '%m' (%d) on read(%d)\n", errno, fd);
             errno = err_sav;
             return -1;
         }
@@ -1122,19 +1122,19 @@ static int pdip_read_line(
 
     } while (1);
 
-} // pdip_read_line
+} // pdemo_read_line
 
 
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_write
+// Name        : pdemo_write
 // Description : Write out data
 // Return      : len, if OK
 //               -1, if error (errno is set)
 //               -2, if background mode
 //----------------------------------------------------------------------------
-static int pdip_write(
+static int pdemo_write(
                       int           fd,
                       const char    *buf,
                       unsigned int  len
@@ -1160,14 +1160,14 @@ static int pdip_write(
 
             // If launched in background and the output is the
             // terminal, we will receive a SIGTTOU. The signal handler
-            // will set pdip_background_out to 1
-            if ((pdip_out == fd || pdip_err == fd) && (pdip_background_out))
+            // will set pdemo_background_out to 1
+            if ((pdemo_out == fd || pdemo_err == fd) && (pdemo_background_out))
             {
                 return -2;
             }
 
             saved_errno = errno;
-            PDIP_ERR("Error '%m' (%d) on write()\n", errno);
+            PDEMO_ERR("Error '%m' (%d) on write()\n", errno);
             errno = saved_errno;
             return -1;
         }
@@ -1178,33 +1178,33 @@ static int pdip_write(
 
     return (int)len;
 
-} // pdip_write
+} // pdemo_write
 
 
 //----------------------------------------------------------------------------
-// Name        : pdip_terminal
+// Name        : pdemo_terminal
 // Description : Simulate a simple terminal in front of the program
 // Return      : 0, if end of input file
 //               -1, error
 //----------------------------------------------------------------------------
-static int pdip_terminal(void)
+static int pdemo_terminal(void)
 {
     int             rc;
     fd_set          fdset;
     int             max_fd;
-    int             fd_input = pdip_in;           // To get data from user
-    int             fd_program = pdip_pty;        // To interact with the program
+    int             fd_input = pdemo_in;           // To get data from user
+    int             fd_program = pdemo_pty;        // To interact with the program
     int             loop = 1;
-    pid_t           pid = pdip_pid;
+    pid_t           pid = pdemo_pid;
     int             err_sav;
     unsigned int    lbuf;
 
     while (loop)
     {
         // If the program is dead
-        if (pdip_dead_prog)
+        if (pdemo_dead_prog)
         {
-            PDIP_DBG(1, "Command (pid = %u) is finished\n", pid);
+            PDEMO_DBG(1, "Command (pid = %u) is finished\n", pid);
 
             // This is not an error ?
             rc = 0;
@@ -1230,7 +1230,7 @@ static int pdip_terminal(void)
                 }
 
                 err_sav = errno;
-                PDIP_ERR("Error '%m' (%d) on select\n", errno);
+                PDEMO_ERR("Error '%m' (%d) on select\n", errno);
                 errno = err_sav;
                 rc = -1;
                 goto end;
@@ -1242,9 +1242,9 @@ static int pdip_terminal(void)
                 // If data from program
                 if (FD_ISSET(fd_program, &fdset))
                 {
-                    rc = pdip_read(fd_program,
-                                   pdip_buf,
-                                   pdip_bufsz - 1);
+                    rc = pdemo_read(fd_program,
+                                   pdemo_buf,
+                                   pdemo_bufsz - 1);
                     if (rc < 0)
                     {
                         rc = -1;
@@ -1253,25 +1253,25 @@ static int pdip_terminal(void)
 
                     if (0 == rc)
                     {
-                        PDIP_ERR("End of program\n");
+                        PDEMO_ERR("End of program\n");
                         goto end;
                     }
 
-                    pdip_buf[rc] = '\0';
+                    pdemo_buf[rc] = '\0';
 
                     // Length of the buffer
                     lbuf = (unsigned int)rc;
 
-                    PDIP_DBG(2, "Received %u bytes from program:\n", lbuf);
-                    PDIP_DUMP(2, pdip_buf, lbuf);
+                    PDEMO_DBG(2, "Received %u bytes from program:\n", lbuf);
+                    PDEMO_DUMP(2, pdemo_buf, lbuf);
 
                     // Forward the data to the output
-                    rc = pdip_write(pdip_out, pdip_buf, lbuf);
+                    rc = pdemo_write(pdemo_out, pdemo_buf, lbuf);
                     if ((unsigned int)rc != lbuf)
                     {
                         if (-2 != rc)
                         {
-                            PDIP_ERR("Error on write\n");
+                            PDEMO_ERR("Error on write\n");
                             rc = -1;
                             goto end;
                         }
@@ -1281,7 +1281,7 @@ static int pdip_terminal(void)
                 // If data from user
                 if (FD_ISSET(fd_input, &fdset))
                 {
-                    rc = pdip_read_line(fd_input, pdip_buf, pdip_bufsz - 1);
+                    rc = pdemo_read_line(fd_input, pdemo_buf, pdemo_bufsz - 1);
                     if (-1 == rc)
                     {
                         rc = -1;
@@ -1301,7 +1301,7 @@ static int pdip_terminal(void)
                         rc = 0;
                     }
 
-                    rc = pdip_write(pdip_pty, pdip_buf, (unsigned int)rc);
+                    rc = pdemo_write(pdemo_pty, pdemo_buf, (unsigned int)rc);
                     if (rc < 0)
                     {
                         rc = -1;
@@ -1316,14 +1316,14 @@ static int pdip_terminal(void)
  end:
 
     return rc;
-} // pdip_terminal
+} // pdemo_terminal
 
 
 typedef struct
 {
     const char *name;
     int         sig;
-} pdip_sig2name;
+} pdemo_sig2name;
 
 
 // ----------------------------------------------------------------------------
@@ -1359,20 +1359,20 @@ int main(
     char          *pScript = NULL;
     int            err_sav;
 
-    // Outputs of PDIP
-    pdip_out = 1;
-    pdip_err = 2;
+    // Outputs of PDEMO
+    pdemo_out = 1;
+    pdemo_err = 2;
 
     // Capture the exception signals
-    pdip_capture_exception_sig();
+    pdemo_capture_exception_sig();
 
     // Manage SIGTTOU/TTIN (for background mode)
-    (void)signal(SIGTTOU, pdip_sig_tt);
-    (void)signal(SIGTTIN, pdip_sig_tt);
+    (void)signal(SIGTTOU, pdemo_sig_tt);
+    (void)signal(SIGTTIN, pdemo_sig_tt);
 
     options = 0;
 
-    while ((opt = getopt_long(ac, av, "s:b:d:Veoph", pdip_longopts, NULL)) != EOF)
+    while ((opt = getopt_long(ac, av, "s:b:d:Veoph", pdemo_longopts, NULL)) != EOF)
     {
         switch(opt)
         {
@@ -1385,14 +1385,14 @@ int main(
 
         case 'b' : // Set the size of the internal I/O buffer
             {
-                pdip_bufsz = (unsigned int)atoi(optarg);
+                pdemo_bufsz = (unsigned int)atoi(optarg);
                 options |= HAS_BUFFSIZE;
             }
             break;
 
         case 'd' : // Debug level
             {
-                pdip_debug = atoi(optarg);
+                pdemo_debug = atoi(optarg);
                 options |= HAS_DEBUGLVL;
             }
             break;
@@ -1423,7 +1423,7 @@ int main(
 
         case 'h' : // Help
             {
-                pdip_help(av[0]);
+                pdemo_help(av[0]);
                 exit(0);
             }
             break;
@@ -1431,7 +1431,7 @@ int main(
         case '?' :
         default :
             {
-                pdip_help(av[0]);
+                pdemo_help(av[0]);
                 exit(1);
             }
         } // End switch
@@ -1440,22 +1440,22 @@ int main(
     // If version requested
     if (options & VERSION)
     {
-        printf("PDIP version: %s\n", pdip_version);
+        printf("PDEMO version: %s\n", pdemo_version);
         exit(0);
     }
 
     // If no command passed
     if (ac == optind)
     {
-    PDIP_ERR("A command to launch is expected at the end of the command line \n\n");
-    pdip_help(av[0]);
+    PDEMO_ERR("A command to launch is expected at the end of the command line \n\n");
+    pdemo_help(av[0]);
     exit(1);
   }
 
   // If the buffer size has not been set or is invalid
-  if (pdip_bufsz <= 100)
+  if (pdemo_bufsz <= 100)
   {
-    pdip_bufsz = PDIP_DEF_BUFSZ;
+    pdemo_bufsz = PDEMO_DEF_BUFSZ;
   }
 
   // Get a master pty
@@ -1467,44 +1467,44 @@ int main(
   //       . O_RDWR Open the device for both reading and writing
   //       . O_NOCTTY Do  not  make  this device the controlling terminal
   //         for the process
-  pdip_pty = posix_openpt(O_RDWR |O_NOCTTY);
-  if (pdip_pty < 0)
+  pdemo_pty = posix_openpt(O_RDWR |O_NOCTTY);
+  if (pdemo_pty < 0)
   {
     err_sav = errno;
-    PDIP_ERR("Impossible to get a master pseudo-terminal - errno = '%m' (%d)\n", errno);
+    PDEMO_ERR("Impossible to get a master pseudo-terminal - errno = '%m' (%d)\n", errno);
     errno = err_sav;
     return 1;
   }
 
   // Grant access to the slave pseudo-terminal
   // (Chown the slave to the calling user)
-  if (0 != grantpt(pdip_pty))
+  if (0 != grantpt(pdemo_pty))
   {
     err_sav = errno;
-    PDIP_ERR("Impossible to grant access to slave pseudo-terminal - errno = '%m' (%d)\n", errno);
-    close(pdip_pty);
+    PDEMO_ERR("Impossible to grant access to slave pseudo-terminal - errno = '%m' (%d)\n", errno);
+    close(pdemo_pty);
     errno = err_sav;
     return 1;
   }
 
   // Unlock pseudo-terminal master/slave pair
   // (Release an internal lock so the slave can be opened)
-  if (0 != unlockpt(pdip_pty))
+  if (0 != unlockpt(pdemo_pty))
   {
     err_sav = errno;
-    PDIP_ERR("Impossible to unlock pseudo-terminal master/slave pair - errno = '%m' (%d)\n", errno);
-    close(pdip_pty);
+    PDEMO_ERR("Impossible to unlock pseudo-terminal master/slave pair - errno = '%m' (%d)\n", errno);
+    close(pdemo_pty);
     errno = err_sav;
     return 1;
   }
 
   // Get the name of the slave pty
-  pty_slave_name = ptsname(pdip_pty);
+  pty_slave_name = ptsname(pdemo_pty);
   if (NULL == pty_slave_name)
   {
     err_sav = errno;
-    PDIP_ERR("Impossible to get the name of the slave pseudo-terminal - errno = '%m' (%d)\n", errno);
-    close(pdip_pty);
+    PDEMO_ERR("Impossible to get the name of the slave pseudo-terminal - errno = '%m' (%d)\n", errno);
+    close(pdemo_pty);
     errno = err_sav;
     return 1;
   }
@@ -1514,8 +1514,8 @@ int main(
   if (fds < 0)
   {
     err_sav = errno;
-    PDIP_ERR("Impossible to open the slave pseudo-terminal - errno = '%m' (%d)\n", errno);
-    close(pdip_pty);
+    PDEMO_ERR("Impossible to open the slave pseudo-terminal - errno = '%m' (%d)\n", errno);
+    close(pdemo_pty);
     errno = err_sav;
     return 1;
   }
@@ -1526,7 +1526,7 @@ int main(
   if (!params)
   {
     err_sav = errno;
-    PDIP_ERR("Unable to allocate the parameters for the command (%u)\n", nb_cmds);
+    PDEMO_ERR("Unable to allocate the parameters for the command (%u)\n", nb_cmds);
     errno = err_sav;
     return  1;
   }
@@ -1539,16 +1539,16 @@ int main(
   params[i] = NULL;
 
   // Capture SIGCHLD
-  pdip_capture_sigchld();
+  pdemo_capture_sigchld();
 
   // Fork a child
-  pdip_pid = fork();
-  switch(pdip_pid)
+  pdemo_pid = fork();
+  switch(pdemo_pid)
   {
     case -1 :
     {
       err_sav = errno;
-      PDIP_ERR("Error '%m' (%d) on fork()\n", errno);
+      PDEMO_ERR("Error '%m' (%d) on fork()\n", errno);
       errno = err_sav;
       return 1;
     }
@@ -1560,7 +1560,7 @@ int main(
     int   fd;
 
       assert(fds > 2);
-      assert(pdip_pty > 2);
+      assert(pdemo_pty > 2);
 
       // Redirect input/outputs to the slave side of PTY
       close(0);
@@ -1581,7 +1581,7 @@ int main(
 
       // Make some cleanups
       close(fds);
-      close(pdip_pty);
+      close(pdemo_pty);
 
       fds = 0;
 
@@ -1591,7 +1591,7 @@ int main(
       if (rc < 0)
       {
         err_sav = errno;
-        PDIP_ERR("Error '%m' (%d) on ioctl(TIOCNOTTY)\n", errno);
+        PDEMO_ERR("Error '%m' (%d) on ioctl(TIOCNOTTY)\n", errno);
         errno = err_sav;
         exit(1);
       }
@@ -1602,7 +1602,7 @@ int main(
       if (rc < 0)
       {
         err_sav = errno;
-        PDIP_ERR("Error '%m' (%d) on setsid()\n", errno);
+        PDEMO_ERR("Error '%m' (%d) on setsid()\n", errno);
         errno = err_sav;
         exit(1);
       }
@@ -1613,7 +1613,7 @@ int main(
       if (rc < 0)
       {
         err_sav = errno;
-        PDIP_ERR("Error '%m' (%d) on ioctl(TIOCSCTTY)\n", errno);
+        PDEMO_ERR("Error '%m' (%d) on ioctl(TIOCSCTTY)\n", errno);
         errno = err_sav;
         exit(1);
       }
@@ -1625,7 +1625,7 @@ int main(
       if (rc < 0)
       {
         err_sav = errno;
-        PDIP_ERR("Error '%m' (%d) on ioctl(TIOCSPGRP)\n", errno);
+        PDEMO_ERR("Error '%m' (%d) on ioctl(TIOCSPGRP)\n", errno);
         errno = err_sav;
         exit(1);
       }
@@ -1637,7 +1637,7 @@ int main(
       if (rc < 0)
       {
         err_sav = errno;
-        PDIP_ERR("Error '%m' (%d) on setpgid()\n", errno);
+        PDEMO_ERR("Error '%m' (%d) on setpgid()\n", errno);
         errno = err_sav;
         exit(1);
       }
@@ -1646,7 +1646,7 @@ int main(
       rc = execvp(params[0], params);
 
       // The error message can't be generated as the outputs are redirected to the PTY
-      //PDIP_ERR("Error '%m' (%d) while running '%s'\n", errno, params[0]);
+      //PDEMO_ERR("Error '%m' (%d) while running '%s'\n", errno, params[0]);
 
       _exit(1);
     }
@@ -1656,51 +1656,51 @@ int main(
     {
     int   status;
 
-      PDIP_DBG(1, "Forked process %d for program '%s'\n", pdip_pid, params[0]);
+      PDEMO_DBG(1, "Forked process %d for program '%s'\n", pdemo_pid, params[0]);
 
-      // See comment above pdip_chld_failed_on_exec definition
-      if (pdip_chld_failed_on_exec)
+      // See comment above pdemo_chld_failed_on_exec definition
+      if (pdemo_chld_failed_on_exec)
       {
-        PDIP_ERR("Error while running '%s'\n", params[0]);
+        PDEMO_ERR("Error while running '%s'\n", params[0]);
         return 1;
       }
 
       // The program is running
-      pdip_dead_prog = 0;
+      pdemo_dead_prog = 0;
 
       // Close the slave side of the PTY
       close(fds);
 
       // Allocate the I/O buffers
-      pdip_buf = (char *)malloc(pdip_bufsz);
-      assert(pdip_buf);
-      pdip_buf1 = (char *)malloc(pdip_bufsz);
-      assert(pdip_buf1);
+      pdemo_buf = (char *)malloc(pdemo_bufsz);
+      assert(pdemo_buf);
+      pdemo_buf1 = (char *)malloc(pdemo_bufsz);
+      assert(pdemo_buf1);
 
       // Allocate the outstanding data buffer
-      pdip_outstanding_buf_sz = pdip_bufsz * 2;
-      pdip_outstanding_buf = (char *)malloc(pdip_outstanding_buf_sz);
-      assert(pdip_outstanding_buf);
+      pdemo_outstanding_buf_sz = pdemo_bufsz * 2;
+      pdemo_outstanding_buf = (char *)malloc(pdemo_outstanding_buf_sz);
+      assert(pdemo_outstanding_buf);
 
       // Open the input
       if (pScript)
       {
-        pdip_in = open(pScript, O_RDONLY);
-        if (pdip_in < 0)
+        pdemo_in = open(pScript, O_RDONLY);
+        if (pdemo_in < 0)
         {
           err_sav = errno;
-          PDIP_ERR("Unable to open '%s' (Error '%m' (%d))\n", pScript, errno);
+          PDEMO_ERR("Unable to open '%s' (Error '%m' (%d))\n", pScript, errno);
           errno = err_sav;
           return 1;
         }
       }
       else
       {
-        pdip_in = 0;
+        pdemo_in = 0;
       }
 
       // Interact with the program
-      rc = pdip_terminal();
+      rc = pdemo_terminal();
 
       /*
         When the master device is closed, the process on the slave side gets
@@ -1712,11 +1712,11 @@ int main(
       */
       if (options & DUMP_O_DATA)
       {
-        pdip_dump_outstanding_data();
+        pdemo_dump_outstanding_data();
       }
-      close(pdip_pty);
-      pdip_pty = -1;
-      free(pdip_buf);
+      close(pdemo_pty);
+      pdemo_pty = -1;
+      free(pdemo_buf);
 
       // Reset the signal SIGCHLD otherwise we may receive the end of child
       // with the following waitpid() and then we will receive the SIGCHLD
@@ -1728,15 +1728,15 @@ int main(
       //                the sub-process is detached to belong to init and
       //                will live sometimes before the cyclic cleanup of init
       //
-      //pdip_reset_sigchld();
+      //pdemo_reset_sigchld();
 
       // If the child is still running
-      if (!pdip_dead_prog)
+      if (!pdemo_dead_prog)
       {
-        PDIP_DBG(4, "Wait for end of program at most 3 seconds\n");
+        PDEMO_DBG(4, "Wait for end of program at most 3 seconds\n");
 
         // Install a timeout
-        signal(SIGALRM, pdip_sig_alarm);
+        signal(SIGALRM, pdemo_sig_alarm);
         alarm(3);
 
         // Get the status of the child if not dead yet
@@ -1744,7 +1744,7 @@ int main(
       } // End if program is running
 
       // Free the parameters
-      pdip_free_argv();
+      pdemo_free_argv();
 
       // If timeout or syntax error or any other error
       if (rc != 0)
@@ -1756,7 +1756,7 @@ int main(
       // requested
       if (options & PROPAGATE_EXIT)
       {
-        return pdip_exit_prog;
+        return pdemo_exit_prog;
       }
     }
     break;
