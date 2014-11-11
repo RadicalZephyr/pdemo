@@ -2700,7 +2700,6 @@ static int pdip_interact(void)
 #define HAS_DEBUGLVL   0x4
 #define VERSION        0x8
 #define REDIRECT_ERR   0x10
-#define TERMINAL_BHVR  0x20
 #define DUMP_O_DATA    0x40
 #define PROPAGATE_EXIT 0x80
 
@@ -2772,12 +2771,6 @@ int main(
         case 'e' : // Redirect standard error as well
             {
                 options |= REDIRECT_ERR;
-            }
-            break;
-
-        case 't' : // Terminal behaviour
-            {
-                options |= TERMINAL_BHVR;
             }
             break;
 
@@ -3072,14 +3065,7 @@ int main(
       }
 
       // Interact with the program
-      if (options & TERMINAL_BHVR)
-      {
-        rc = pdip_terminal();
-      }
-      else
-      {
-        rc = pdip_interact();
-      }
+      rc = pdip_terminal();
 
       /*
         When the master device is closed, the process on the slave side gets
