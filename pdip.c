@@ -2691,6 +2691,18 @@ static int pdip_interact(void)
 } // pdip_interact
 
 
+// ----------------------------------------------------------------------------
+// Options compile constants
+// ----------------------------------------------------------------------------
+
+#define HAS_SCRIPT     0x1
+#define HAS_BUFFSIZE   0x2
+#define HAS_DEBUGLVL   0x4
+#define VERSION        0x8
+#define REDIRECT_ERR   0x10
+#define TERMINAL_BHVR  0x20
+#define DUMP_O_DATA    0x40
+#define PROPAGATE_EXIT 0x80
 
 
 // ----------------------------------------------------------------------------
@@ -2733,51 +2745,51 @@ int main(
         case 's' : // Script to interpret
             {
                 pScript = optarg;
-                options |= 0x1;
+                options |= HAS_SCRIPT;
             }
             break;
 
         case 'b' : // Set the size of the internal I/O buffer
             {
                 pdip_bufsz = (unsigned int)atoi(optarg);
-                options |= 0x2;
+                options |= HAS_BUFFSIZE;
             }
             break;
 
         case 'd' : // Debug level
             {
                 pdip_debug = atoi(optarg);
-                options |= 0x4;
+                options |= HAS_DEBUGLVL;
             }
             break;
 
         case 'V' : // Version
             {
-                options |= 0x8;
+                options |= VERSION;
             }
             break;
 
         case 'e' : // Redirect standard error as well
             {
-                options |= 0x10;
+                options |= REDIRECT_ERR;
             }
             break;
 
         case 't' : // Terminal behaviour
             {
-                options |= 0x20;
+                options |= TERMINAL_BHVR;
             }
             break;
 
         case 'o' : // Dump outstanding data at the end of the session
             {
-                options |= 0x40;
+                options |= DUMP_O_DATA;
             }
             break;
 
         case 'p' : // Propagate exit code of controlled program
             {
-                options |= 0x80;
+                options |= PROPAGATE_EXIT;
             }
             break;
 
@@ -2798,7 +2810,7 @@ int main(
     } // End while
 
     // If version requested
-    if (options & 0x8)
+    if (options & VERSION)
     {
         printf("PDIP version: %s\n", pdip_version);
         exit(0);
@@ -2925,7 +2937,7 @@ int main(
       // Redirect input/outputs to the slave side of PTY
       close(0);
       close(1);
-      if (options & 0x10)
+      if (options & REDIRECT_ERR)
       {
         close(2);
       }
@@ -2933,7 +2945,7 @@ int main(
       assert(fd >= 0);
       fd = dup(fds);
       assert(fd >= 0);
-      if (options & 0x10)
+      if (options & REDIRECT_ERR)
       {
         fd = dup(fds);
         assert(fd >= 0);
@@ -3060,7 +3072,7 @@ int main(
       }
 
       // Interact with the program
-      if (options & 0x20)
+      if (options & TERMINAL_BHVR)
       {
         rc = pdip_terminal();
       }
@@ -3077,7 +3089,7 @@ int main(
         call will return 0 (zero) indicating that the slave can no longer be
         used.
       */
-      if (options & 0x40)
+      if (options & DUMP_O_DATA)
       {
         pdip_dump_outstanding_data();
       }
@@ -3121,7 +3133,7 @@ int main(
 
       // If sub-process terminated in error, propagate its exit code if
       // requested
-      if (options & 0x80)
+      if (options & PROPAGATE_EXIT)
       {
         return pdip_exit_prog;
       }
