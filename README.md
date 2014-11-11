@@ -28,48 +28,50 @@ You can generate a zipped tar file of the sources:
   will create a sub-directory called pdip-xxx with the source files of
   the program:
 
-    $ tar xvfz pdip-xxx.tgz
+    `$ tar xvfz pdip-xxx.tgz`
 
   * Go into the newly created directory:
 
-    $ cd pdip-xxx
+    `$ cd pdip-xxx`
 
   * Make sure the file pdip_install.sh has the execute permission:
 
-    $ chmod +x pdip_install.sh
+    `$ chmod +x pdip_install.sh`
 
   * Launch the script pdip_install.sh to get the help:
 
-    $ ./pdip_install.sh -h
+``` bash
+$ ./pdip_install.sh -h
 
-    Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
+Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
-             -d : Installation directory (default: /usr/local)
-             -P : Generate a DEB or RPM package
-             -B : Build the software
-             -I : Install the software
-             -A : Generate an archive of the software (sources)
-             -h : this help
+         -d : Installation directory (default: /usr/local)
+         -P : Generate a DEB or RPM package
+         -B : Build the software
+         -I : Install the software
+         -A : Generate an archive of the software (sources)
+         -h : this help
+```
 
   * Under root identity, launch the installation by passing '-I' and optionnaly '-d' to
   specify an installation directory different than '/usr/local':
   For example, for an installation in '/usr/local', type:
 
-    $ sudo ./pdip_install.sh -I
+    `$ sudo ./pdip_install.sh -I`
 
   For an installation in '/usr', type;
 
-    $ sudo ./pdip_install.sh -I -d /usr
+    `$ sudo ./pdip_install.sh -I -d /usr`
 
 
   * If your PATH variable is correctly set, PDIP help can be displayed:
 
-    $ pdip --help
+    `$ pdip --help`
 
   * If your MANPATH variable is correctly set, PDIP's online manual can
 be displayed:
 
-    $ man pdip
+    `$ man pdip`
 
 
 2. Installation of the binaries from the DEB package
@@ -98,39 +100,41 @@ The files are installed via the command:
     will create a sub-directory called pdip-xxx with the source files
     of the program:
 
-    $ tar xvfz pdip-xxx.tgz
+    `$ tar xvfz pdip-xxx.tgz`
 
   * Go into the newly created directory:
 
-    $ cd pdip-xxx
+    `$ cd pdip-xxx`
 
   * Make sure the file pdip_install.sh has the execute permission:
 
-    $ chmod +x pdip_install.sh
+    `$ chmod +x pdip_install.sh`
 
   * Launch the script pdip_install.sh to get the help:
 
-    $ ./pdip_install.sh -h
+``` bash
+$ ./pdip_install.sh -h
 
-    Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
+Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
-             -d : Installation directory (default: /usr/local)
-             -P : Generate a DEB or RPM package
-             -B : Build the software
-             -I : Install the software
-             -A : Generate an archive of the software (sources)
-             -h : this help
+         -d : Installation directory (default: /usr/local)
+         -P : Generate a DEB or RPM package
+         -B : Build the software
+         -I : Install the software
+         -A : Generate an archive of the software (sources)
+         -h : this help
+```
 
   * Under root identity, launch the installation by passing '-P DEB'
   and optionnaly '-d' to specify an installation directory different
   than '/usr/local': For example, for a package which will be
   installed in '/usr/local', type:
 
-    $ sudo ./pdip_install.sh -P DEB
+    `$ sudo ./pdip_install.sh -P DEB`
 
   For an installation in '/usr', type;
 
-    $ sudo ./pdip_install.sh -P DEB -d /usr
+    `$ sudo ./pdip_install.sh -P DEB -d /usr`
 
 
 
@@ -144,39 +148,41 @@ The files are installed via the command:
     will create a sub-directory called pdip-xxx with the source files
     of the program:
 
-    $ tar xvfz pdip-xxx.tgz
+    `$ tar xvfz pdip-xxx.tgz`
 
   * Go into the newly created directory:
 
-    $ cd pdip-xxx
+    `$ cd pdip-xxx`
 
   * Make sure the file pdip_install.sh has the execute permission:
 
-    $ chmod +x pdip_install.sh
+    `$ chmod +x pdip_install.sh`
 
   * Launch the script pdip_install.sh to get the help:
 
-    $ ./pdip_install.sh -h
+``` bash
+$ ./pdip_install.sh -h
 
-    Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
+Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
-             -d : Installation directory (default: /usr/local)
-             -P : Generate a DEB or RPM package
-             -B : Build the software
-             -I : Install the software
-             -A : Generate an archive of the software (sources)
-             -h : this help
+         -d : Installation directory (default: /usr/local)
+         -P : Generate a DEB or RPM package
+         -B : Build the software
+         -I : Install the software
+         -A : Generate an archive of the software (sources)
+         -h : this help
+```
 
   * Under root identity, launch the installation by passing '-P RPM'
   and optionnaly '-d' to specify an installation directory different
   than '/usr/local': For example, for a package which will be
   installed in '/usr/local', type:
 
-    $ sudo ./pdip_install.sh -P RPM
+    `$ sudo ./pdip_install.sh -P RPM`
 
   For an installation in '/usr', type;
 
-    $ sudo ./pdip_install.sh -P RPM -d /usr
+    `$ sudo ./pdip_install.sh -P RPM -d /usr`
 
 
 
@@ -190,29 +196,31 @@ The files are installed via the command:
     will create a sub-directory called pdip-xxx with the source files
     of the program:
 
-    $ tar xvfz pdip-xxx.tgz
+    `$ tar xvfz pdip-xxx.tgz`
 
   * Go into the newly created directory:
 
-    $ cd pdip-xxx
+    `$ cd pdip-xxx`
 
   * Make sure the file pdip_install.sh has the execute permission:
 
-    $ chmod +x pdip_install.sh
+    `$ chmod +x pdip_install.sh`
 
   * Launch the script pdip_install.sh to get the help:
 
-    $ ./pdip_install.sh -h
+``` bash
+$ ./pdip_install.sh -h
 
-    Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
+Usage: pdip_install.sh [-d install_root_dir] [-P DEB | RPM] [-B] [-I] [-A] [-h]
 
-             -d : Installation directory (default: /usr/local)
-             -P : Generate a DEB or RPM package
-             -B : Build the software
-             -I : Install the software
-             -A : Generate an archive of the software (sources)
-             -h : this help
+         -d : Installation directory (default: /usr/local)
+         -P : Generate a DEB or RPM package
+         -B : Build the software
+         -I : Install the software
+         -A : Generate an archive of the software (sources)
+         -h : this help
+```
 
   * Under root identity, launch the installation by passing '-A':
 
-    $ sudo ./pdip_install.sh -A
+    `$ sudo ./pdip_install.sh -A`
