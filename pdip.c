@@ -188,7 +188,7 @@ extern char **environ;
 // Name   : PDIP_ERR
 // Usage  : Error messages
 // ----------------------------------------------------------------------------
-#define PDIP_ERR(format, ...) do { if (!pdip_background_out)	        \
+#define PDIP_ERR(format, ...) do { if (!pdip_background_out)          \
       fprintf(stderr,                                                   \
               "PDIP(%d) ERROR (%s#%d): "format,                         \
               getpid(), __FUNCTION__, __LINE__, ## __VA_ARGS__);        \
@@ -376,7 +376,7 @@ fprintf(stderr,
         p,
         p,
         PDIP_DEF_BUFSZ
-	);
+  );
 } // pdip_help
 
 
@@ -857,7 +857,7 @@ int status;
     kill(pdip_pid, SIGTERM);
     sleep(1);
 
-    // The signal handler for SIGCHLD may be triggered if the child dies  
+    // The signal handler for SIGCHLD may be triggered if the child dies
 
     // If the sub-process didn't died ==> SIGKILL
     if (!pdip_dead_prog)
@@ -1043,7 +1043,7 @@ int rc;
         PDIP_DUMP(0, pdip_buf, (unsigned int)rc);
       }
     } while (rc > 0);
-  }  
+  }
 
 } // pdip_dump_outstanding_data
 
@@ -1114,11 +1114,11 @@ int   status;
 
         // If error and debug not activated, force an error message
         if (pdip_exit_prog != 0)
-	{
+  {
           if (0 == pdip_debug)
-	  {
+    {
             PDIP_DBG(0, "Sub process with pid %d exited with code %d\n", pid, pdip_exit_prog);
-	  }
+    }
 
           // If error, dump the outstanding data in case error messages from
           // the program are available
@@ -1128,13 +1128,13 @@ int   status;
       else
       {
         if (WIFSIGNALED(status))
-	{
+  {
           PDIP_ERR("Sub process with pid %d finished with signal %d%s\n", pid, WTERMSIG(status), (WCOREDUMP(status) ? " (core dumped)" : ""));
-	}
+  }
         else
-	{
+  {
           PDIP_ERR("Sub process with pid %d finished in error\n", pid);
-	}
+  }
 
         // Default error exit code
         pdip_exit_prog = 1;
@@ -1231,7 +1231,7 @@ static void pdip_sig_exception(
                                int        sig,
                                siginfo_t *info,
                                void      *context
-			      )
+            )
 {
 //ucontext_t  *pCtx = (ucontext_t *)context;
 
@@ -1396,7 +1396,7 @@ one_more_time:
       {
         goto one_more_time;
       }
-  
+
       // If launched in background and the output is the terminal, we will receive a
       // SIGTTOU. The signal handler will set pdip_background_out to 1
       if ((pdip_out == fd || pdip_err == fd) && (pdip_background_out))
@@ -1436,7 +1436,7 @@ int  rc;
       (void)pdip_write(pdip_out, pdip_buf, rc);
     }
   } while (rc > 0);
-  
+
 } // pdip_flush
 
 
@@ -1914,13 +1914,13 @@ unsigned int    lbuf;
           {
             rc = -1;
             goto end;
-	  }
+    }
 
           if (0 == rc)
           {
             PDIP_ERR("End of program\n");
             goto end;
-	  }
+    }
 
           pdip_buf[rc] = '\0';
 
@@ -1935,11 +1935,11 @@ unsigned int    lbuf;
           if ((unsigned int)rc != lbuf)
           {
             if (-2 != rc)
-	    {
+      {
               PDIP_ERR("Error on write\n");
               rc = -1;
               goto end;
-	    }
+      }
           }
         } // End if data from program
 
@@ -1948,30 +1948,30 @@ unsigned int    lbuf;
         {
           rc = pdip_read_line(fd_input, pdip_buf, pdip_bufsz - 1);
           if (-1 == rc)
-	  {
+    {
             rc = -1;
             goto end;
-	  }
+    }
 
           // EOF
           if (0 == rc)
           {
             goto end;
-	  }
+    }
 
           // If background mode
           if (-2 == rc)
-	  {
+    {
             // Simulate no input data
             rc = 0;
-	  }
+    }
 
           rc = pdip_write(pdip_pty, pdip_buf, (unsigned int)rc);
           if (rc < 0)
-	  {
+    {
             rc = -1;
             goto end;
-	  }
+    }
         } // End if data from user
       }
       break;
@@ -2145,16 +2145,16 @@ int             err_sav;
                            pdip_buf,
                            pdip_bufsz - 1);
             if (rc < 0)
-	    {
+      {
               rc = -1;
               goto end;
-	    }
+      }
 
             if (0 == rc)
-	    {
+      {
               PDIP_ERR("End of program\n");
               goto end;
-	    }
+      }
 
             pdip_buf[rc] = '\0';
 
@@ -2166,21 +2166,21 @@ int             err_sav;
 
             // Is there a synchro ?
             if (synchro)
-	    {
+      {
               // Append the read data to the outstanding buffer if enough room
               if (lbuf > (pdip_outstanding_buf_sz - pdip_loutstanding))
-	      {
+        {
                 // Not enough room ==> Increase the buffer size
                 pdip_outstanding_buf = (char *)realloc(pdip_outstanding_buf, pdip_outstanding_buf_sz + lbuf);
                 if (!pdip_outstanding_buf)
-		{
+    {
                   PDIP_ERR("Not enough room for outstanding data (max = %u, current size = %u, new input data sz = %u)\n", pdip_outstanding_buf_sz, pdip_loutstanding, lbuf);
                   rc = -1;
                   goto end;
-		}
+    }
 
                 pdip_outstanding_buf_sz += lbuf;
-	      } // End if enough room
+        } // End if enough room
 
               memcpy(pdip_outstanding_buf + pdip_loutstanding, pdip_buf, lbuf);
               pdip_loutstanding = lbuf + pdip_loutstanding;
@@ -2196,28 +2196,28 @@ int             err_sav;
                 fd_program = -1;
               }
               else
-	      {
+        {
                 if (-1 == rc)
                 {
                   PDIP_ERR("Error\n");
                   rc = -1;
                   goto end;
                 }
-	      }
-	    }
+        }
+      }
             else // There is no synchro
             {
               // Forward the data to the output
               rc = pdip_write(pdip_out, pdip_buf, lbuf);
               if ((unsigned int)rc != lbuf)
-	      {
+        {
                 if (-2 != rc)
-		{
+    {
                   PDIP_ERR("Error on write\n");
                   rc = -1;
                   goto end;
-		}
-	      }
+    }
+        }
             }
           } // End if data from program
         } // End if read program activated
@@ -2227,17 +2227,17 @@ int             err_sav;
         {
           // If there are data from user
           if (FD_ISSET(fd_input, &fdset))
-	  {
+    {
             rc = pdip_read_line(fd_input, pdip_buf, pdip_bufsz - 1);
             if (-1 == rc)
-	    {
+      {
               rc = -1;
               goto end;
-	    }
+      }
 
             // EOF
             if (0 == rc)
-	    {
+      {
               // Print out the outstanding data received from the program
               if (pdip_loutstanding)
               {
@@ -2245,14 +2245,14 @@ int             err_sav;
               }
 
               goto end;
-	    }
+      }
 
             // If background mode
             if (-2 == rc)
-	    {
+      {
               // Simulate no input data
               rc = 0;
-	    }
+      }
 
             // Make a string
             pdip_buf[rc] = '\0';
@@ -2264,9 +2264,9 @@ int             err_sav;
             // '\n' char)
             p = pdip_buf;
             while (*p && ('\n' != *p))
-	    {
+      {
               p ++;
-	    } // End while
+      } // End while
 
             // Terminate the string
             *p = '\0';
@@ -2284,41 +2284,41 @@ int             err_sav;
 
             // Empty line ?
             if (!pdip_argc)
-	    {
+      {
               continue;
-	    }
+      }
 
             // Get the keyword
             pKeyword = pdip_argv[0];
 
             // Timeout ?
             if (!strcmp("timeout", pKeyword))
-	    {
+      {
               if (pdip_argc != 2)
-	      {
+        {
                 PDIP_ERR("Line %u: A parameter is required for 'timeout'\n", lineno);
-	      }
+        }
 
               to = (unsigned int)atoi(pdip_argv[1]);
 
               PDIP_DBG(1, "Input line %u: %s %u\n", lineno, pKeyword, to);
-	    } // End if timeout
+      } // End if timeout
 
             // recv ?
             else if (!strcmp("recv", pKeyword))
-	    {
+      {
               // Free the current regular expression if any
               regfree(&regex);
 
               if (1 == pdip_argc)
-	      {
+        {
                 // With no parameters, we match an end of line
                 // ==> Copy the pattern in a writable buffer
                 strncat(pKeyword, " \"$\"", pdip_bufsz - (unsigned int)(p - pdip_buf));
                 *p = '\0';
                 PDIP_DBG(1, "Input line %u: %s %s\n", lineno, pKeyword, p+1);
                 pdip_compile_regex(p + 1, &regex);
-	      }
+        }
               else
               {
                 if (2 == pdip_argc)
@@ -2359,19 +2359,19 @@ int             err_sav;
                   synchro       = 0;
                 }
               }
-	    } // End if recv
+      } // End if recv
 
             // send ?
             else if (!strcmp("send", pKeyword))
-	    {
+      {
               if (1 == pdip_argc)
-	      {
+        {
                 PDIP_DBG(1, "Input line %u: %s\n", lineno, pKeyword);
                 // No parameter ==> Send a carriage return to the program
                 pdip_write(pdip_pty, "\n", 1);
               }
               else
-	      {
+        {
                 if (2 == pdip_argc)
                 {
                   PDIP_DBG(1, "Input line %u: %s %s\n", lineno, pKeyword, pdip_argv[1]);
@@ -2395,11 +2395,11 @@ int             err_sav;
                   }
 
                   if (rc < 0)
-		  {
+      {
                     rc = -1;
                     goto end;
-		  }
-	        }
+      }
+          }
                 else
                 {
                   PDIP_ERR("Line %u: Bad parameters\n", lineno);
@@ -2407,62 +2407,62 @@ int             err_sav;
                   goto end;
                 }
               }
-	    } // End if send
+      } // End if send
 
             // sig ?
             else if (!strcmp("sig", pKeyword))
-	    {
+      {
               if (2 == pdip_argc)
               {
-	      int sig = pdip_sigstr2num(pdip_argv[1]);
+        int sig = pdip_sigstr2num(pdip_argv[1]);
 
-	        if (sig < 0)
-		{
+          if (sig < 0)
+    {
                   PDIP_ERR("Line %u: Bad signal name '%s'\n", lineno, pdip_argv[1]);
                   rc = -1;
                   goto end;
-		}
+    }
                 PDIP_DBG(1, "Input line %u: %s %s\n", lineno, pKeyword, pdip_argv[1]);
 
                 rc = kill(pid, sig);
                 if (rc < 0)
-		{
+    {
                   PDIP_ERR("Line %u: Error %d while sending signal '%s'\n", lineno, errno, pdip_argv[1]);
                   goto end;
-		}
+    }
 
                 rc = 0;
               }
-	    } // End if send
+      } // End if send
 
             // sleep ?
             else if (!strcmp("sleep", pKeyword))
-	    {
+      {
             unsigned int duration;
 
               if (2 != pdip_argc)
-	      {
+        {
                 PDIP_ERR("Line %u: A parameter is required for 'sleep'\n", lineno);
                 rc = -1;
                 goto end;
-	      }
+        }
               PDIP_DBG(1, "Input line %u: %s %s\n", lineno, pKeyword, pdip_argv[1]);
 
               duration = (unsigned int)atoi(pdip_argv[1]);
               sleep(duration);
-	    } // End if sleep
+      } // End if sleep
 
             // print ?
             else if (!strcmp("print", pKeyword))
-	    {
+      {
               if (2 != pdip_argc)
-	      {
+        {
                 PDIP_ERR("Line %u: A parameter is required for 'print'\n", lineno);
                 rc = -1;
                 goto end;
-	      }
+        }
 
-              // Translate the format into a string 
+              // Translate the format into a string
               l = pdip_bufsz;
               rc = pdip_format_params(pdip_argv[1], pdip_buf1, &l);
               if (rc < 0)
@@ -2472,20 +2472,20 @@ int             err_sav;
                 goto end;
               }
               PDIP_DBG(1, "Input line %u: %s %s\n", lineno, pKeyword, pdip_argv[1]);
-              pdip_write(pdip_out, pdip_buf1, l); 
-	    } // End if print
+              pdip_write(pdip_out, pdip_buf1, l);
+      } // End if print
 
             // dbg ?
             else if (!strcmp("dbg", pKeyword))
-	    {
-	    int old_dbg = pdip_debug;
+      {
+      int old_dbg = pdip_debug;
 
               if (2 != pdip_argc)
-	      {
+        {
                 PDIP_ERR("Line %u: A parameter is required for 'dbg'\n", lineno);
                 rc = -1;
                 goto end;
-	      }
+        }
 
               // Display the trace before setting the new debug mode if the debug mode is set
               PDIP_DBG(1, "Input line %u: %s %d to %s\n", lineno, pKeyword, pdip_debug, pdip_argv[1]);
@@ -2494,42 +2494,42 @@ int             err_sav;
 
               // Display the trace after setting the new debug mode if the previous debug mode was unset
               if (!old_dbg)
-	      {
+        {
                 PDIP_DBG(1, "Input line %u: %s %u to %u\n", lineno, pKeyword, old_dbg, pdip_debug);
-	      }
-	    } // End if dbg
+        }
+      } // End if dbg
 
             // exit ?
             else if (!strcmp("exit", pKeyword))
-	    {
+      {
               PDIP_DBG(1, "Input line %u: %s\n", lineno, pKeyword);
               loop = 0;
-	    } // End if exit
+      } // End if exit
 
             // sh ?
             else if (!strcmp("sh", pKeyword))
-	    {
-	    int   synchronous_sh;
+      {
+      int   synchronous_sh;
             int   status;
             pid_t pid_sh;
 
               PDIP_DBG(1, "Input line %u: %s\n", lineno, pKeyword);
 
               if (pdip_argc < 2)
-	      {
+        {
                 PDIP_ERR("Line %u: Parameters are required for 'sh'\n", lineno);
                 rc = -1;
                 goto end;
-	      }
+        }
 
               if (!strcmp("-s", pdip_argv[1]))
-	      {
+        {
                 if (pdip_argc < 3)
-	        {
+          {
                   PDIP_ERR("Line %u: Parameters are required for 'sh'\n", lineno);
                   rc = -1;
                   goto end;
-		}
+    }
 
                 synchronous_sh = 1;
 
@@ -2538,122 +2538,122 @@ int             err_sav;
                 // Reset signals
                 (void)signal(SIGCHLD, SIG_DFL);
 
-  	        pid_sh = fork();
-	      }
+            pid_sh = fork();
+        }
               else
-	      {
+        {
                 synchronous_sh = 0;
 
                 PDIP_DBG(1, "Input line %u: %s %s...\n", lineno, pKeyword, pdip_argv[1]);
 
-  	        pid_sh = fork();
-	      }
+            pid_sh = fork();
+        }
 
               switch(pid_sh)
-	      {
-	        case -1:
-		{
+        {
+          case -1:
+    {
                   PDIP_ERR("Line %u: fork() failed with error %d ('%m')\n", lineno, errno);
                   rc = -1;
                   goto end;
-		}
+    }
                 break;
 
-	        case 0 : // Child
-		{
-		char **av;
+          case 0 : // Child
+    {
+    char **av;
                 int    sz;
                 int    i;
 
                   // Execute the program
                   if (synchronous_sh)
-		  {
+      {
                     sz = pdip_argc - 1;
-		    av = (char **)malloc(sz * sizeof(char *));
+        av = (char **)malloc(sz * sizeof(char *));
                     if (av)
-		    {
+        {
                       for (i = 0; i < (sz - 1); i ++)
-		      {
+          {
                         av[i] = pdip_argv[i + 2];
-		      } // End for
+          } // End for
                       av[i] = NULL;
                       (void)execvp(pdip_argv[2], av);
-		    }
+        }
                     else
-		    {
+        {
                       PDIP_ERR("Line %u: malloc(%zu) failed with error %d ('%m')\n"
                                , lineno, (size_t)(pdip_argc * sizeof(char *)), errno);
-		    }
-		  }
+        }
+      }
                   else // Asynchronous mode
-		  {
+      {
                     sz = pdip_argc;
-		    av = (char **)malloc(sz * sizeof(char *));
+        av = (char **)malloc(sz * sizeof(char *));
                     if (av)
-		    {
+        {
                       for (i = 0; i < (sz - 1); i ++)
-		      {
+          {
                         av[i] = pdip_argv[i + 1];
-		      } // End for
+          } // End for
                       av[i] = NULL;
                       (void)execvp(pdip_argv[1], av);
-		    }
+        }
                     else
-		    {
+        {
                       PDIP_ERR("Line %u: malloc(%zu) failed with error %d ('%m')\n"
                                , lineno, (size_t)(pdip_argc * sizeof(char *)), errno);
-		    }
-		  } // End if synchronous
+        }
+      } // End if synchronous
 
                   _exit(1);
-		}
+    }
                 break;
 
-	        default : // Father
-		{
+          default : // Father
+    {
                   if (synchronous_sh)
-		  {
+      {
                     PDIP_DBG(2, "Waiting for end of process %d\n", pid_sh);
 
                     // Wait for the end of the child
                     if (waitpid(pid_sh, &status, 0) < 0)
-		    {
+        {
                       PDIP_ERR("Line %u: waitpid(%d) failed with error %d ('%m')\n", lineno, pid_sh, errno);
                       rc = -1;
                       goto end;
-		    }
+        }
 
                     // Restore the handler for SIGCHLD
                     pdip_capture_sigchld();
 
                     if (WIFEXITED(status))
-		    {
+        {
                       PDIP_DBG(2, "%s %s %s... terminated with exit code %d\n"
                                ,
                                pKeyword, pdip_argv[1], pdip_argv[2], WEXITSTATUS(status));
-		    }
+        }
                     else
-		    {
+        {
                       PDIP_ERR("Line %u: Shell program failed\n", lineno);
                       rc = -1;
                       goto end;
-		    }
-		  } // End if synchronous
+        }
+      } // End if synchronous
 
-		}
+    }
                 break;
-	      } // End switch
+        } // End switch
 
-	    } // End if sh
+      } // End if sh
 
             // ?????
             else
-	    {
+      {
               PDIP_ERR("Line %u: Unknown keyword '%s'\n", lineno, pKeyword);
               rc = -1;
               goto end;
-	    }
-	  } // End if data from user
+      }
+    } // End if data from user
         } // End if we are allowed to read from user
 
         PDIP_DBG(3, "Synchro %s, timeout %d seconds\n", (synchro ? "ON" : "OFF"), to);
@@ -2911,10 +2911,10 @@ int            err_sav;
     {
     pid_t mypid = getpid();
     int   fd;
- 
+
       assert(fds > 2);
       assert(pdip_pty > 2);
-      
+
       // Redirect input/outputs to the slave side of PTY
       close(0);
       close(1);
@@ -2960,7 +2960,7 @@ int            err_sav;
         exit(1);
       }
 
-      // As the child is a session leader, set the controlling terminal to be the slave side of the PTY 
+      // As the child is a session leader, set the controlling terminal to be the slave side of the PTY
       rc = ioctl(fds, TIOCSCTTY, 1);
       if (rc < 0)
       {
