@@ -16,7 +16,7 @@ SET(pdip_exe pdip)
 SET(pdip_man_src pdip_en.1 pdip_fr.1)
 STRING(REGEX REPLACE ".1" ".1.gz" pdip_man_gz "${pdip_man_src}")
 
-ADD_DEFINITIONS(-g -O2 -fsigned-char -freg-struct-return -Wall -W -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual -Winline -Werror)
+ADD_DEFINITIONS(-g -O2 -fsigned-char -Wall -W -Wshadow -Wstrict-prototypes -Wpointer-arith -Wcast-qual -Winline -Werror)
 
 # Compression of the manuals
 FOREACH(man ${pdip_man_src})
