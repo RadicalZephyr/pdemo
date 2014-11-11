@@ -934,8 +934,9 @@ static int pdip_read(
                 continue;
             }
 
-            // If launched in background and the input is the terminal, we will receive a
-            // SIGTTIN. The signal handler will set pdip_background_in to 1
+            // If launched in background and the input is the
+            // terminal, we will receive a SIGTTIN. The signal handler
+            // will set pdip_background_in to 1
             if ((pdip_in == fd) && (pdip_background_in))
             {
                 return -2;
@@ -1120,9 +1121,9 @@ static void pdip_sig_chld(int sig)
                         PDIP_DBG(0, "Sub process with pid %d exited with code %d\n", pid, pdip_exit_prog);
                     }
 
-                    // If error, dump the outstanding data in case error messages from
-                    // the program are available
-                    //pdip_dump_outstanding_data();
+                    // If error, dump the outstanding data in case
+                    // error messages from the program are available
+                    // pdip_dump_outstanding_data();
                 }
             }
             else
@@ -1151,8 +1152,8 @@ static void pdip_sig_chld(int sig)
     }
     else
     {
-        // We failed inside the fork() ==> See comment above pdip_chld_failed_on_exec
-        // definition
+        // We failed inside the fork() ==> See comment above
+        // pdip_chld_failed_on_exec definition
         PDIP_DBG(1, "Child %d finished in error\n", pid);
         pdip_chld_failed_on_exec = 1;
 
@@ -1397,8 +1398,9 @@ static int pdip_write(
                 goto one_more_time;
             }
 
-            // If launched in background and the output is the terminal, we will receive a
-            // SIGTTOU. The signal handler will set pdip_background_out to 1
+            // If launched in background and the output is the
+            // terminal, we will receive a SIGTTOU. The signal handler
+            // will set pdip_background_out to 1
             if ((pdip_out == fd || pdip_err == fd) && (pdip_background_out))
             {
                 return -2;
@@ -1455,7 +1457,9 @@ static void pdip_flush(int fd)
 static int pdip_handle_synchro(
                                regex_t       *regex,
                                char          *buffer,
-                               unsigned int  *lbuf    // Remaining data in the buffer
+                               unsigned int  *lbuf    // Remaining
+                                                      // data in the
+                                                      // buffer
                                )
 {
     int             rc;
@@ -1472,8 +1476,8 @@ static int pdip_handle_synchro(
 
     PDIP_DBG(2, "Looking for synchro string: <%s>\n", pdip_synchro);
 
-    // The size of the working buffer must be at least the size of the input
-    // buffer + 1 for the terminating NUL
+    // The size of the working buffer must be at least the size of the
+    // input buffer + 1 for the terminating NUL
     if (*lbuf >= line_sz)
     {
         l = line_sz + (*lbuf - line_sz) + 1;
@@ -1502,9 +1506,9 @@ static int pdip_handle_synchro(
 
         p = eol = buffer;
 
-        // Copy the line into a temporary buffer to ignore the NUL chars coming
-        // from the program
-        // (e.g. telnet sends lots of NUL chars during the login session)
+        // Copy the line into a temporary buffer to ignore the NUL
+        // chars coming from the program (e.g. telnet sends lots of
+        // NUL chars during the login session)
         i       = 0;
         nb_skip = 0;
         eol_fnd = 0;
@@ -1546,10 +1550,11 @@ static int pdip_handle_synchro(
         PDIP_DBG(2, "Current line is:\n");
         PDIP_DUMP(2, line, strlen(line) + 1);
 
-        // Normally we are tempted to launch the pattern matching only if we have
-        // a complete line because the pattern may concern the end of line
-        // (i.e. '$'). But this would block the program which prints lines without
-        // end of line (like login or password requests !)
+        // Normally we are tempted to launch the pattern matching only
+        // if we have a complete line because the pattern may concern
+        // the end of line (i.e. '$'). But this would block the
+        // program which prints lines without end of line (like login
+        // or password requests !)
         rc = regexec(regex, line, 1, &result, 0);
         if (0 == rc)
         {
@@ -2167,7 +2172,8 @@ static int pdip_interact(void)
                         // Is there a synchro ?
                         if (synchro)
                         {
-                            // Append the read data to the outstanding buffer if enough room
+                            // Append the read data to the outstanding
+                            // buffer if enough room
                             if (lbuf > (pdip_outstanding_buf_sz - pdip_loutstanding))
                             {
                                 // Not enough room ==> Increase the buffer size
@@ -2238,7 +2244,8 @@ static int pdip_interact(void)
                         // EOF
                         if (0 == rc)
                         {
-                            // Print out the outstanding data received from the program
+                            // Print out the outstanding data received
+                            // from the program
                             if (pdip_loutstanding)
                             {
                                 (void)pdip_write(pdip_out, pdip_outstanding_buf, pdip_loutstanding);
@@ -2260,8 +2267,8 @@ static int pdip_interact(void)
                         // Increment the number of input lines
                         lineno ++;
 
-                        // Make the input buffer become a string (overwrite the ending
-                        // '\n' char)
+                        // Make the input buffer become a string
+                        // (overwrite the ending '\n' char)
                         p = pdip_buf;
                         while (*p && ('\n' != *p))
                         {
@@ -2800,324 +2807,327 @@ int main(
     // If no command passed
     if (ac == optind)
     {
-        PDIP_ERR("A command to launch is expected at the end of the command line \n\n");
-        pdip_help(av[0]);
-        exit(1);
-    }
+    PDIP_ERR("A command to launch is expected at the end of the command line \n\n");
+    pdip_help(av[0]);
+    exit(1);
+  }
 
-    // If the buffer size has not been set or is invalid
-    if (pdip_bufsz <= 100)
-    {
-        pdip_bufsz = PDIP_DEF_BUFSZ;
-    }
+  // If the buffer size has not been set or is invalid
+  if (pdip_bufsz <= 100)
+  {
+    pdip_bufsz = PDIP_DEF_BUFSZ;
+  }
 
-    // Get a master pty
-    //
-    // posix_openpt() opens a pseudo-terminal master and returns its file
-    // descriptor.
-    // It is equivalent to open("/dev/ptmx",O_RDWR|O_NOCTTY) on Linux systems :
-    //
-    //       . O_RDWR Open the device for both reading and writing
-    //       . O_NOCTTY Do  not  make  this device the controlling terminal
-    //         for the process
-    pdip_pty = posix_openpt(O_RDWR |O_NOCTTY);
-    if (pdip_pty < 0)
-    {
-        err_sav = errno;
-        PDIP_ERR("Impossible to get a master pseudo-terminal - errno = '%m' (%d)\n", errno);
-        errno = err_sav;
-        return 1;
-    }
+  // Get a master pty
+  //
+  // posix_openpt() opens a pseudo-terminal master and returns its file
+  // descriptor.
+  // It is equivalent to open("/dev/ptmx",O_RDWR|O_NOCTTY) on Linux systems :
+  //
+  //       . O_RDWR Open the device for both reading and writing
+  //       . O_NOCTTY Do  not  make  this device the controlling terminal
+  //         for the process
+  pdip_pty = posix_openpt(O_RDWR |O_NOCTTY);
+  if (pdip_pty < 0)
+  {
+    err_sav = errno;
+    PDIP_ERR("Impossible to get a master pseudo-terminal - errno = '%m' (%d)\n", errno);
+    errno = err_sav;
+    return 1;
+  }
 
-    // Grant access to the slave pseudo-terminal
-    // (Chown the slave to the calling user)
-    if (0 != grantpt(pdip_pty))
-    {
-        err_sav = errno;
-        PDIP_ERR("Impossible to grant access to slave pseudo-terminal - errno = '%m' (%d)\n", errno);
-        close(pdip_pty);
-        errno = err_sav;
-        return 1;
-    }
+  // Grant access to the slave pseudo-terminal
+  // (Chown the slave to the calling user)
+  if (0 != grantpt(pdip_pty))
+  {
+    err_sav = errno;
+    PDIP_ERR("Impossible to grant access to slave pseudo-terminal - errno = '%m' (%d)\n", errno);
+    close(pdip_pty);
+    errno = err_sav;
+    return 1;
+  }
 
-    // Unlock pseudo-terminal master/slave pair
-    // (Release an internal lock so the slave can be opened)
-    if (0 != unlockpt(pdip_pty))
-    {
-        err_sav = errno;
-        PDIP_ERR("Impossible to unlock pseudo-terminal master/slave pair - errno = '%m' (%d)\n", errno);
-        close(pdip_pty);
-        errno = err_sav;
-        return 1;
-    }
+  // Unlock pseudo-terminal master/slave pair
+  // (Release an internal lock so the slave can be opened)
+  if (0 != unlockpt(pdip_pty))
+  {
+    err_sav = errno;
+    PDIP_ERR("Impossible to unlock pseudo-terminal master/slave pair - errno = '%m' (%d)\n", errno);
+    close(pdip_pty);
+    errno = err_sav;
+    return 1;
+  }
 
-    // Get the name of the slave pty
-    pty_slave_name = ptsname(pdip_pty);
-    if (NULL == pty_slave_name)
-    {
-        err_sav = errno;
-        PDIP_ERR("Impossible to get the name of the slave pseudo-terminal - errno = '%m' (%d)\n", errno);
-        close(pdip_pty);
-        errno = err_sav;
-        return 1;
-    }
+  // Get the name of the slave pty
+  pty_slave_name = ptsname(pdip_pty);
+  if (NULL == pty_slave_name)
+  {
+    err_sav = errno;
+    PDIP_ERR("Impossible to get the name of the slave pseudo-terminal - errno = '%m' (%d)\n", errno);
+    close(pdip_pty);
+    errno = err_sav;
+    return 1;
+  }
 
-    // Open the slave part of the terminal
-    fds = open(pty_slave_name, O_RDWR);
-    if (fds < 0)
-    {
-        err_sav = errno;
-        PDIP_ERR("Impossible to open the slave pseudo-terminal - errno = '%m' (%d)\n", errno);
-        close(pdip_pty);
-        errno = err_sav;
-        return 1;
-    }
+  // Open the slave part of the terminal
+  fds = open(pty_slave_name, O_RDWR);
+  if (fds < 0)
+  {
+    err_sav = errno;
+    PDIP_ERR("Impossible to open the slave pseudo-terminal - errno = '%m' (%d)\n", errno);
+    close(pdip_pty);
+    errno = err_sav;
+    return 1;
+  }
 
-    // Allocate the parameters for the command
-    nb_cmds = (unsigned int)(ac - optind);
-    params = (char **)malloc(sizeof(char *) * (nb_cmds + 1));
-    if (!params)
-    {
-        err_sav = errno;
-        PDIP_ERR("Unable to allocate the parameters for the command (%u)\n", nb_cmds);
-        errno = err_sav;
-        return  1;
-    }
+  // Allocate the parameters for the command
+  nb_cmds = (unsigned int)(ac - optind);
+  params = (char **)malloc(sizeof(char *) * (nb_cmds + 1));
+  if (!params)
+  {
+    err_sav = errno;
+    PDIP_ERR("Unable to allocate the parameters for the command (%u)\n", nb_cmds);
+    errno = err_sav;
+    return  1;
+  }
 
-    // Set the parameters for the command
-    for (i = 0; i < nb_cmds; i ++)
-    {
-        params[i] = av[optind + (int)i];
-    } // End for
-    params[i] = NULL;
+  // Set the parameters for the command
+  for (i = 0; i < nb_cmds; i ++)
+  {
+    params[i] = av[optind + (int)i];
+  } // End for
+  params[i] = NULL;
 
-    // Capture SIGCHLD
-    pdip_capture_sigchld();
+  // Capture SIGCHLD
+  pdip_capture_sigchld();
 
-    // Fork a child
-    pdip_pid = fork();
-    switch(pdip_pid)
-    {
+  // Fork a child
+  pdip_pid = fork();
+  switch(pdip_pid)
+  {
     case -1 :
-        {
-            err_sav = errno;
-            PDIP_ERR("Error '%m' (%d) on fork()\n", errno);
-            errno = err_sav;
-            return 1;
-        }
-        break;
+    {
+      err_sav = errno;
+      PDIP_ERR("Error '%m' (%d) on fork()\n", errno);
+      errno = err_sav;
+      return 1;
+    }
+    break;
 
     case 0 : // Child
-        {
-            pid_t mypid = getpid();
-            int   fd;
+    {
+    pid_t mypid = getpid();
+    int   fd;
 
-            assert(fds > 2);
-            assert(pdip_pty > 2);
+      assert(fds > 2);
+      assert(pdip_pty > 2);
 
-            // Redirect input/outputs to the slave side of PTY
-            close(0);
-            close(1);
-            if (options & 0x10)
-            {
-                close(2);
-            }
-            fd = dup(fds);
-            assert(fd >= 0);
-            fd = dup(fds);
-            assert(fd >= 0);
-            if (options & 0x10)
-            {
-                fd = dup(fds);
-                assert(fd >= 0);
-            }
+      // Redirect input/outputs to the slave side of PTY
+      close(0);
+      close(1);
+      if (options & 0x10)
+      {
+        close(2);
+      }
+      fd = dup(fds);
+      assert(fd >= 0);
+      fd = dup(fds);
+      assert(fd >= 0);
+      if (options & 0x10)
+      {
+        fd = dup(fds);
+        assert(fd >= 0);
+      }
 
-            // Make some cleanups
-            close(fds);
-            close(pdip_pty);
+      // Make some cleanups
+      close(fds);
+      close(pdip_pty);
 
-            fds = 0;
-
-#if 0
-            // Remove controlling terminal if any
-            rc = ioctl(fds, TIOCNOTTY);
-            if (rc < 0)
-            {
-                err_sav = errno;
-                PDIP_ERR("Error '%m' (%d) on ioctl(TIOCNOTTY)\n", errno);
-                errno = err_sav;
-                exit(1);
-            }
-#endif // 0
-
-            // Make the child become a process session leader
-            rc = setsid();
-            if (rc < 0)
-            {
-                err_sav = errno;
-                PDIP_ERR("Error '%m' (%d) on setsid()\n", errno);
-                errno = err_sav;
-                exit(1);
-            }
-
-            // As the child is a session leader, set the controlling terminal to be the slave side of the PTY
-            rc = ioctl(fds, TIOCSCTTY, 1);
-            if (rc < 0)
-            {
-                err_sav = errno;
-                PDIP_ERR("Error '%m' (%d) on ioctl(TIOCSCTTY)\n", errno);
-                errno = err_sav;
-                exit(1);
-            }
+      fds = 0;
 
 #if 0
-            // Make the foreground process group on the terminal be the process id of the child
-            rc = ioctl(fds, TIOCSPGRP, &mypid);
-            if (rc < 0)
-            {
-                err_sav = errno;
-                PDIP_ERR("Error '%m' (%d) on ioctl(TIOCSPGRP)\n", errno);
-                errno = err_sav;
-                exit(1);
-            }
+      // Remove controlling terminal if any
+      rc = ioctl(fds, TIOCNOTTY);
+      if (rc < 0)
+      {
+        err_sav = errno;
+        PDIP_ERR("Error '%m' (%d) on ioctl(TIOCNOTTY)\n", errno);
+        errno = err_sav;
+        exit(1);
+      }
 #endif // 0
 
-            // Make the foreground process group on the terminal be the process id of the child
-            rc = tcsetpgrp(fds, mypid);
-            if (rc < 0)
-            {
-                err_sav = errno;
-                PDIP_ERR("Error '%m' (%d) on setpgid()\n", errno);
-                errno = err_sav;
-                exit(1);
-            }
+      // Make the child become a process session leader
+      rc = setsid();
+      if (rc < 0)
+      {
+        err_sav = errno;
+        PDIP_ERR("Error '%m' (%d) on setsid()\n", errno);
+        errno = err_sav;
+        exit(1);
+      }
 
-            // Exec the program
-            rc = execvp(params[0], params);
+      // As the child is a session leader, set the controlling
+      // terminal to be the slave side of the PTY
+      rc = ioctl(fds, TIOCSCTTY, 1);
+      if (rc < 0)
+      {
+        err_sav = errno;
+        PDIP_ERR("Error '%m' (%d) on ioctl(TIOCSCTTY)\n", errno);
+        errno = err_sav;
+        exit(1);
+      }
 
-            // The error message can't be generated as the outputs are redirected to the PTY
-            //PDIP_ERR("Error '%m' (%d) while running '%s'\n", errno, params[0]);
+#if 0
+      // Make the foreground process group on the terminal be the
+      // process id of the child
+      rc = ioctl(fds, TIOCSPGRP, &mypid);
+      if (rc < 0)
+      {
+        err_sav = errno;
+        PDIP_ERR("Error '%m' (%d) on ioctl(TIOCSPGRP)\n", errno);
+        errno = err_sav;
+        exit(1);
+      }
+#endif // 0
 
-            _exit(1);
-        }
-        break;
+      // Make the foreground process group on the terminal be the
+      // process id of the child
+      rc = tcsetpgrp(fds, mypid);
+      if (rc < 0)
+      {
+        err_sav = errno;
+        PDIP_ERR("Error '%m' (%d) on setpgid()\n", errno);
+        errno = err_sav;
+        exit(1);
+      }
+
+      // Exec the program
+      rc = execvp(params[0], params);
+
+      // The error message can't be generated as the outputs are redirected to the PTY
+      //PDIP_ERR("Error '%m' (%d) while running '%s'\n", errno, params[0]);
+
+      _exit(1);
+    }
+    break;
 
     default: // Father
+    {
+    int   status;
+
+      PDIP_DBG(1, "Forked process %d for program '%s'\n", pdip_pid, params[0]);
+
+      // See comment above pdip_chld_failed_on_exec definition
+      if (pdip_chld_failed_on_exec)
+      {
+        PDIP_ERR("Error while running '%s'\n", params[0]);
+        return 1;
+      }
+
+      // The program is running
+      pdip_dead_prog = 0;
+
+      // Close the slave side of the PTY
+      close(fds);
+
+      // Allocate the I/O buffers
+      pdip_buf = (char *)malloc(pdip_bufsz);
+      assert(pdip_buf);
+      pdip_buf1 = (char *)malloc(pdip_bufsz);
+      assert(pdip_buf1);
+
+      // Allocate the outstanding data buffer
+      pdip_outstanding_buf_sz = pdip_bufsz * 2;
+      pdip_outstanding_buf = (char *)malloc(pdip_outstanding_buf_sz);
+      assert(pdip_outstanding_buf);
+
+      // Open the input
+      if (pScript)
+      {
+        pdip_in = open(pScript, O_RDONLY);
+        if (pdip_in < 0)
         {
-            int   status;
-
-            PDIP_DBG(1, "Forked process %d for program '%s'\n", pdip_pid, params[0]);
-
-            // See comment above pdip_chld_failed_on_exec definition
-            if (pdip_chld_failed_on_exec)
-            {
-                PDIP_ERR("Error while running '%s'\n", params[0]);
-                return 1;
-            }
-
-            // The program is running
-            pdip_dead_prog = 0;
-
-            // Close the slave side of the PTY
-            close(fds);
-
-            // Allocate the I/O buffers
-            pdip_buf = (char *)malloc(pdip_bufsz);
-            assert(pdip_buf);
-            pdip_buf1 = (char *)malloc(pdip_bufsz);
-            assert(pdip_buf1);
-
-            // Allocate the outstanding data buffer
-            pdip_outstanding_buf_sz = pdip_bufsz * 2;
-            pdip_outstanding_buf = (char *)malloc(pdip_outstanding_buf_sz);
-            assert(pdip_outstanding_buf);
-
-            // Open the input
-            if (pScript)
-            {
-                pdip_in = open(pScript, O_RDONLY);
-                if (pdip_in < 0)
-                {
-                    err_sav = errno;
-                    PDIP_ERR("Unable to open '%s' (Error '%m' (%d))\n", pScript, errno);
-                    errno = err_sav;
-                    return 1;
-                }
-            }
-            else
-            {
-                pdip_in = 0;
-            }
-
-            // Interact with the program
-            if (options & 0x20)
-            {
-                rc = pdip_terminal();
-            }
-            else
-            {
-                rc = pdip_interact();
-            }
-
-            /*
-              When the master device is closed, the process on the slave side gets
-              the errno ENXIO when attempting a write() system call on the slave
-              device but it will be able to read any data remaining on the slave
-              stream. Finally, when all the data have been read, the read() system
-              call will return 0 (zero) indicating that the slave can no longer be
-              used.
-            */
-            if (options & 0x40)
-            {
-                pdip_dump_outstanding_data();
-            }
-            close(pdip_pty);
-            pdip_pty = -1;
-            free(pdip_buf);
-
-            // Reset the signal SIGCHLD otherwise we may receive the end of child
-            // with the following waitpid() and then we will receive the SIGCHLD
-            // which would trigger the signal handler in which waitpid() would
-            // return in error
-            //
-            // RECTIFICATION: We don't unset the SIGCHLD signal otherwise all
-            //                subsequent calls to waitpid() fail with ECHILD and
-            //                the sub-process is detached to belong to init and
-            //                will live sometimes before the cyclic cleanup of init
-            //
-            //pdip_reset_sigchld();
-
-            // If the child is still running
-            if (!pdip_dead_prog)
-            {
-                PDIP_DBG(4, "Wait for end of program at most 3 seconds\n");
-
-                // Install a timeout
-                signal(SIGALRM, pdip_sig_alarm);
-                alarm(3);
-
-                // Get the status of the child if not dead yet
-                (void)waitpid(-1, &status, 0);
-            } // End if program is running
-
-            // Free the parameters
-            pdip_free_argv();
-
-            // If timeout or syntax error or any other error
-            if (rc != 0)
-            {
-                return 1;
-            }
-
-            // If sub-process terminated in error, propagate its exit code if
-            // requested
-            if (options & 0x80)
-            {
-                return pdip_exit_prog;
-            }
+          err_sav = errno;
+          PDIP_ERR("Unable to open '%s' (Error '%m' (%d))\n", pScript, errno);
+          errno = err_sav;
+          return 1;
         }
-        break;
-    } // End switch
+      }
+      else
+      {
+        pdip_in = 0;
+      }
 
-    return 0;
+      // Interact with the program
+      if (options & 0x20)
+      {
+        rc = pdip_terminal();
+      }
+      else
+      {
+        rc = pdip_interact();
+      }
+
+      /*
+        When the master device is closed, the process on the slave side gets
+        the errno ENXIO when attempting a write() system call on the slave
+        device but it will be able to read any data remaining on the slave
+        stream. Finally, when all the data have been read, the read() system
+        call will return 0 (zero) indicating that the slave can no longer be
+        used.
+      */
+      if (options & 0x40)
+      {
+        pdip_dump_outstanding_data();
+      }
+      close(pdip_pty);
+      pdip_pty = -1;
+      free(pdip_buf);
+
+      // Reset the signal SIGCHLD otherwise we may receive the end of child
+      // with the following waitpid() and then we will receive the SIGCHLD
+      // which would trigger the signal handler in which waitpid() would
+      // return in error
+      //
+      // RECTIFICATION: We don't unset the SIGCHLD signal otherwise all
+      //                subsequent calls to waitpid() fail with ECHILD and
+      //                the sub-process is detached to belong to init and
+      //                will live sometimes before the cyclic cleanup of init
+      //
+      //pdip_reset_sigchld();
+
+      // If the child is still running
+      if (!pdip_dead_prog)
+      {
+        PDIP_DBG(4, "Wait for end of program at most 3 seconds\n");
+
+        // Install a timeout
+        signal(SIGALRM, pdip_sig_alarm);
+        alarm(3);
+
+        // Get the status of the child if not dead yet
+        (void)waitpid(-1, &status, 0);
+      } // End if program is running
+
+      // Free the parameters
+      pdip_free_argv();
+
+      // If timeout or syntax error or any other error
+      if (rc != 0)
+      {
+        return 1;
+      }
+
+      // If sub-process terminated in error, propagate its exit code if
+      // requested
+      if (options & 0x80)
+      {
+        return pdip_exit_prog;
+      }
+    }
+    break;
+  } // End switch
+
+  return 0;
 } // main
